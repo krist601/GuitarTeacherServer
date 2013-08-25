@@ -1,5 +1,5 @@
 
-<%@ page import="Teacher.Sample" %>
+<%@ page import="teacher.Sample" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -28,17 +28,6 @@
 					<span id="name-label" class="property-label"><g:message code="sample.name.label" default="Name" /></span>
 					
 						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${sampleInstance}" field="name"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${sampleInstance?.score}">
-				<li class="fieldcontain">
-					<span id="score-label" class="property-label"><g:message code="sample.score.label" default="Score" /></span>
-					
-						<g:each in="${sampleInstance.score}" var="s">
-						<span class="property-value" aria-labelledby="score-label"><g:link controller="score" action="show" id="${s.id}">${s?.encodeAsHTML()}</g:link></span>
-						</g:each>
 					
 				</li>
 				</g:if>

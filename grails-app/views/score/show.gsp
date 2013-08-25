@@ -1,5 +1,5 @@
 
-<%@ page import="Teacher.Score" %>
+<%@ page import="teacher.Score" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -32,11 +32,29 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${scoreInstance?.sample}">
+				<li class="fieldcontain">
+					<span id="sample-label" class="property-label"><g:message code="score.sample.label" default="Sample" /></span>
+					
+						<span class="property-value" aria-labelledby="sample-label"><g:link controller="sample" action="show" id="${scoreInstance?.sample?.id}">${scoreInstance?.sample?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${scoreInstance?.score}">
 				<li class="fieldcontain">
 					<span id="score-label" class="property-label"><g:message code="score.score.label" default="Score" /></span>
 					
 						<span class="property-value" aria-labelledby="score-label"><g:fieldValue bean="${scoreInstance}" field="score"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${scoreInstance?.usuario}">
+				<li class="fieldcontain">
+					<span id="usuario-label" class="property-label"><g:message code="score.usuario.label" default="Usuario" /></span>
+					
+						<span class="property-value" aria-labelledby="usuario-label"><g:link controller="usuario" action="show" id="${scoreInstance?.usuario?.id}">${scoreInstance?.usuario?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

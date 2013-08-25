@@ -1,4 +1,4 @@
-<%@ page import="Teacher.Sample" %>
+<%@ page import="teacher.Sample" %>
 <!DOCTYPE html>
 <html>
 	<head>

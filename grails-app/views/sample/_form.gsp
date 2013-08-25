@@ -1,4 +1,4 @@
-<%@ page import="Teacher.Sample" %>
+<%@ page import="teacher.Sample" %>
 
 
 
@@ -8,14 +8,6 @@
 		
 	</label>
 	<g:textField name="name" value="${sampleInstance?.name}"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: sampleInstance, field: 'score', 'error')} ">
-	<label for="score">
-		<g:message code="sample.score.label" default="Score" />
-		
-	</label>
-	<g:select name="score" from="${Teacher.Score.list()}" multiple="multiple" optionKey="id" size="5" value="${sampleInstance?.score*.id}" class="many-to-many"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: sampleInstance, field: 'sound', 'error')} required">

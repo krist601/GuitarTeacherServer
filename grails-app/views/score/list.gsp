@@ -1,5 +1,5 @@
 
-<%@ page import="Teacher.Score" %>
+<%@ page import="teacher.Score" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,7 +26,11 @@
 					
 						<g:sortableColumn property="date" title="${message(code: 'score.date.label', default: 'Date')}" />
 					
+						<th><g:message code="score.sample.label" default="Sample" /></th>
+					
 						<g:sortableColumn property="score" title="${message(code: 'score.score.label', default: 'Score')}" />
+					
+						<th><g:message code="score.usuario.label" default="Usuario" /></th>
 					
 					</tr>
 				</thead>
@@ -36,7 +40,11 @@
 					
 						<td><g:link action="show" id="${scoreInstance.id}">${fieldValue(bean: scoreInstance, field: "date")}</g:link></td>
 					
+						<td>${fieldValue(bean: scoreInstance, field: "sample")}</td>
+					
 						<td>${fieldValue(bean: scoreInstance, field: "score")}</td>
+					
+						<td>${fieldValue(bean: scoreInstance, field: "usuario")}</td>
 					
 					</tr>
 				</g:each>
