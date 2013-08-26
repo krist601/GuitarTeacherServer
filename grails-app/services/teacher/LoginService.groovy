@@ -6,8 +6,8 @@ class LoginService {
     static expose = ['xcfjax ']
     
     @WebResult(name="Login")
-    @WebMethod(operationName="Validate Login") 
-    Float Login(@WebParam(name="Nickname")String nickname,@WebParam(name="Password")String password){
+    @WebMethod(operationName="add") 
+    Float Login(){
         return 'Funciona'
     }
 }
