@@ -89,3 +89,40 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.exampleApp.security.User'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.exampleApp.security.UserRole'
+grails.plugins.springsecurity.authority.className = 'com.exampleApp.security.Role'
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'security.User'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'security.UserRole'
+grails.plugins.springsecurity.authority.className = 'security.Role'
+
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'security.User'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'security.UserRole'
+grails.plugins.springsecurity.authority.className = 'security.Role'
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.exampleApp.security.User'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.exampleApp.security.UserRole'
+grails.plugins.springsecurity.authority.className = 'com.exampleApp.security.Role'
+
+grails {
+   mail {
+host = "smtp.gmail.com"
+port = 465
+username = "info.exampleApp@gmail.com"
+password = "exampleAppPassword"
+props = ["mail.smtp.auth":"true",
+"mail.smtp.socketFactory.port":"465",
+"mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+"mail.smtp.socketFactory.fallback":"false"]
+   }
+}
+grails.mail.default.from="info.exampleApp@gmail.com"
+
+
