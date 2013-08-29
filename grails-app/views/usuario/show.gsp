@@ -59,20 +59,20 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${usuarioInstance?.token}">
+				<li class="fieldcontain">
+					<span id="token-label" class="property-label"><g:message code="usuario.token.label" default="Token" /></span>
+					
+						<span class="property-value" aria-labelledby="token-label"><g:fieldValue bean="${usuarioInstance}" field="token"/></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${usuarioInstance?.userName}">
 				<li class="fieldcontain">
 					<span id="userName-label" class="property-label"><g:message code="usuario.userName.label" default="User Name" /></span>
 					
 						<span class="property-value" aria-labelledby="userName-label"><g:fieldValue bean="${usuarioInstance}" field="userName"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${usuarioInstance?.usuario}">
-				<li class="fieldcontain">
-					<span id="usuario-label" class="property-label"><g:message code="usuario.usuario.label" default="Usuario" /></span>
-					
-						<span class="property-value" aria-labelledby="usuario-label"><g:link controller="usuario" action="show" id="${usuarioInstance?.usuario?.id}">${usuarioInstance?.usuario?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

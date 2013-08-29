@@ -1,11 +1,13 @@
 package teacher
+import teacher.Usuario
+import teacher.Sample
 
 class Score {
-    
     int score
     Date date
-    static belongsTo = [usuario: Usuario,sample: Sample]
-    
+    static belongsTo = [sample: Sample, usuario: Usuario]
+    //static belongsTo = [Usuario, Sample]
+
     static constraints = {
     }
 }

@@ -32,9 +32,9 @@
 					
 						<g:sortableColumn property="password" title="${message(code: 'usuario.password.label', default: 'Password')}" />
 					
-						<g:sortableColumn property="userName" title="${message(code: 'usuario.userName.label', default: 'User Name')}" />
+						<g:sortableColumn property="token" title="${message(code: 'usuario.token.label', default: 'Token')}" />
 					
-						<th><g:message code="usuario.usuario.label" default="Usuario" /></th>
+						<g:sortableColumn property="userName" title="${message(code: 'usuario.userName.label', default: 'User Name')}" />
 					
 					</tr>
 				</thead>
@@ -50,9 +50,9 @@
 					
 						<td>${fieldValue(bean: usuarioInstance, field: "password")}</td>
 					
-						<td>${fieldValue(bean: usuarioInstance, field: "userName")}</td>
+						<td>${fieldValue(bean: usuarioInstance, field: "token")}</td>
 					
-						<td>${fieldValue(bean: usuarioInstance, field: "usuario")}</td>
+						<td>${fieldValue(bean: usuarioInstance, field: "userName")}</td>
 					
 					</tr>
 				</g:each>

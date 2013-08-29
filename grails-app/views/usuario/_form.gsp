@@ -34,19 +34,19 @@
 	<g:textField name="password" value="${usuarioInstance?.password}"/>
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: usuarioInstance, field: 'token', 'error')} ">
+	<label for="token">
+		<g:message code="usuario.token.label" default="Token" />
+		
+	</label>
+	<g:textField name="token" value="${usuarioInstance?.token}"/>
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: usuarioInstance, field: 'userName', 'error')} ">
 	<label for="userName">
 		<g:message code="usuario.userName.label" default="User Name" />
 		
 	</label>
 	<g:textField name="userName" value="${usuarioInstance?.userName}"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: usuarioInstance, field: 'usuario', 'error')} required">
-	<label for="usuario">
-		<g:message code="usuario.usuario.label" default="Usuario" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:select id="usuario" name="usuario.id" from="${teacher.Usuario.list()}" optionKey="id" required="" value="${usuarioInstance?.usuario?.id}" class="many-to-one"/>
 </div>
 
