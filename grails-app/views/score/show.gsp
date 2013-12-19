@@ -32,11 +32,20 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${scoreInstance?.sample}">
+				<g:if test="${scoreInstance?.level}">
 				<li class="fieldcontain">
-					<span id="sample-label" class="property-label"><g:message code="score.sample.label" default="Sample" /></span>
+					<span id="level-label" class="property-label"><g:message code="score.level.label" default="Level" /></span>
 					
-						<span class="property-value" aria-labelledby="sample-label"><g:link controller="sample" action="show" id="${scoreInstance?.sample?.id}">${scoreInstance?.sample?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="level-label"><g:link controller="level" action="show" id="${scoreInstance?.level?.id}">${scoreInstance?.level?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${scoreInstance?.player}">
+				<li class="fieldcontain">
+					<span id="player-label" class="property-label"><g:message code="score.player.label" default="Player" /></span>
+					
+						<span class="property-value" aria-labelledby="player-label"><g:link controller="player" action="show" id="${scoreInstance?.player?.id}">${scoreInstance?.player?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
@@ -46,15 +55,6 @@
 					<span id="score-label" class="property-label"><g:message code="score.score.label" default="Score" /></span>
 					
 						<span class="property-value" aria-labelledby="score-label"><g:fieldValue bean="${scoreInstance}" field="score"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${scoreInstance?.usuario}">
-				<li class="fieldcontain">
-					<span id="usuario-label" class="property-label"><g:message code="score.usuario.label" default="Usuario" /></span>
-					
-						<span class="property-value" aria-labelledby="usuario-label"><g:link controller="usuario" action="show" id="${scoreInstance?.usuario?.id}">${scoreInstance?.usuario?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

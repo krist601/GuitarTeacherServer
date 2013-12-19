@@ -26,11 +26,11 @@
 					
 						<g:sortableColumn property="date" title="${message(code: 'score.date.label', default: 'Date')}" />
 					
-						<th><g:message code="score.sample.label" default="Sample" /></th>
+						<th><g:message code="score.level.label" default="Level" /></th>
+					
+						<th><g:message code="score.player.label" default="Player" /></th>
 					
 						<g:sortableColumn property="score" title="${message(code: 'score.score.label', default: 'Score')}" />
-					
-						<th><g:message code="score.usuario.label" default="Usuario" /></th>
 					
 					</tr>
 				</thead>
@@ -40,11 +40,11 @@
 					
 						<td><g:link action="show" id="${scoreInstance.id}">${fieldValue(bean: scoreInstance, field: "date")}</g:link></td>
 					
-						<td>${fieldValue(bean: scoreInstance, field: "sample")}</td>
+						<td>${fieldValue(bean: scoreInstance, field: "level")}</td>
+					
+						<td>${fieldValue(bean: scoreInstance, field: "player")}</td>
 					
 						<td>${fieldValue(bean: scoreInstance, field: "score")}</td>
-					
-						<td>${fieldValue(bean: scoreInstance, field: "usuario")}</td>
 					
 					</tr>
 				</g:each>

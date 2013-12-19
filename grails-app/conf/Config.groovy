@@ -10,24 +10,24 @@
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
-
-grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
-grails.mime.types = [
-    all:           '*/*',
-    atom:          'application/atom+xml',
-    css:           'text/css',
-    csv:           'text/csv',
-    form:          'application/x-www-form-urlencoded',
-    html:          ['text/html','application/xhtml+xml'],
-    js:            'text/javascript',
-    json:          ['application/json', 'text/json'],
-    multipartForm: 'multipart/form-data',
-    rss:           'application/rss+xml',
-    text:          'text/plain',
-    xml:           ['text/xml', 'application/xml']
-]
+grails.mime.types = [ 
+                      all:           '*/*',
+                      html: ['text/html','application/xhtml+xml'],
+                      xml: ['text/xml', 'application/xml'],
+                      text: 'text/plain',
+                      js: 'text/javascript',
+                      rss: 'application/rss+xml',
+                      atom: 'application/atom+xml',
+                      css: 'text/css',
+                      csv: 'text/csv',
+                      all: '*/*',
+                      json: ['application/json','text/json'],
+                      form: 'application/x-www-form-urlencoded',
+                      multipartForm: 'multipart/form-data'
+                    ]
+
 
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
@@ -43,11 +43,12 @@ grails.converters.encoding = "UTF-8"
 grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
+// enabled native2ascii conversion of i18n properties files
+grails.enable.native2ascii = true
 
 // Set to false to use the new Grails 1.2 JSONBuilder in the render method
 grails.json.legacy.builder = false
-// enabled native2ascii conversion of i18n properties files
-grails.enable.native2ascii = true
+
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
 // whether to disable processing of multi part requests
@@ -89,3 +90,25 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+fileuploader {
+	avatar {
+		maxSize = 1024 * 256 //256 kbytes
+		allowedExtensions = ["jpg","jpeg","gif","png"]
+		path = "/tmp/avatar/"
+	}
+	docs {
+		maxSize = 1000 * 1024 * 4 //4 mbytes
+		allowedExtensions = ["doc", "docx", "pdf", "rtf"]
+		path = "/tmp/docs/"
+	}
+        sounds {
+		maxSize = 1000 * 1024 * 4 //4 mbytes
+		allowedExtensions = ["mp3"]
+		path = "/tmp/sounds/"
+	}
+}
+
+//grails.plugin.facebooksdk.app.id = 602198353187425
+//grails.plugin.facebooksdk.app.permissions = [manage_friendlists]
+//grails.plugin.facebooksdk.app.secret = 86c67292dfe5507f6f79fc41b6f5776c

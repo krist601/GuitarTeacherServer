@@ -10,12 +10,20 @@
 	<g:datePicker name="date" precision="day"  value="${scoreInstance?.date}"  />
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: scoreInstance, field: 'sample', 'error')} required">
-	<label for="sample">
-		<g:message code="score.sample.label" default="Sample" />
+<div class="fieldcontain ${hasErrors(bean: scoreInstance, field: 'level', 'error')} required">
+	<label for="level">
+		<g:message code="score.level.label" default="Level" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="sample" name="sample.id" from="${teacher.Sample.list()}" optionKey="id" required="" value="${scoreInstance?.sample?.id}" class="many-to-one"/>
+	<g:select id="level" name="level.id" from="${teacher.Level.list()}" optionKey="id" required="" value="${scoreInstance?.level?.id}" class="many-to-one"/>
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: scoreInstance, field: 'player', 'error')} required">
+	<label for="player">
+		<g:message code="score.player.label" default="Player" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:select id="player" name="player.id" from="${teacher.Player.list()}" optionKey="id" required="" value="${scoreInstance?.player?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: scoreInstance, field: 'score', 'error')} required">
@@ -24,13 +32,5 @@
 		<span class="required-indicator">*</span>
 	</label>
 	<g:field name="score" type="number" value="${scoreInstance.score}" required=""/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: scoreInstance, field: 'usuario', 'error')} required">
-	<label for="usuario">
-		<g:message code="score.usuario.label" default="Usuario" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:select id="usuario" name="usuario.id" from="${teacher.Usuario.list()}" optionKey="id" required="" value="${scoreInstance?.usuario?.id}" class="many-to-one"/>
 </div>
 
