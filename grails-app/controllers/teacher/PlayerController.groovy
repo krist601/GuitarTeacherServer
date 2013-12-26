@@ -11,7 +11,7 @@ import Services.FriendScore
 import grails.converters.XML
 import java.text.SimpleDateFormat
 import org.apache.commons.validator.EmailValidator
-import Services.Notification
+import grails.plugin.facebooksdk.FacebookGraphClient
 
 class PlayerController {
 
@@ -111,8 +111,48 @@ class PlayerController {
         }
     }
     def signInService(){
-        def user = request.XML?.nickname.toString()
-        
+        def nickname = request.XML?.nickname.toString()
+        def userAccessToken = request.XML?.token.toString()
+        def response = new SignIn()
+        try{
+            def facebookClient = new FacebookGraphClient(userAccessToken)
+            String query = "SELECT uid2 FROM friend WHERE uid1= "+nickname.toString()
+            def users = facebookClient.executeQuery(query)
+            def player2=Player.findByNickname(nickname)
+            if(player2){        
+                users.toString().tokenize("],").each{
+                    def spl=it.tokenize('"')
+                    def player=Player.findByNickname(spl[3])
+                    if(player){
+                        def fri=Follower.findByPlayerAndFollower(player,player2)
+                        if(!fri){
+                            def follower =new Follower()
+                            follower.player=player
+                            follower.follower=player2
+                            follower.save()
+                        }
+                        fri=Follower.findByPlayerAndFollower(player2,player)
+                        if(!fri){
+                            def follower2 =new Follower()
+                            follower2.player=player2
+                            follower2.follower=player
+                            follower2.save()
+                        }
+                    }
+                }
+                response.key="1"
+                response.value="New followers successfully added" 
+            }
+            else{
+                response.key="0"
+                response.value="Error, The user id doesn't exist"            
+            }
+        }
+        catch(Exception){
+                response.key="0"
+                response.value="Error, Facebook's token session has expired"  
+        }
+        render response as XML
     }
     
     def loginService(){
