@@ -11,6 +11,7 @@ import Services.FriendScore
 import grails.converters.XML
 import java.text.SimpleDateFormat
 import org.apache.commons.validator.EmailValidator
+import Services.Notification
 
 class PlayerController {
 
@@ -110,93 +111,6 @@ class PlayerController {
         }
     }
     def signInService(){
-        def sign=new SignIn()
-        def nickname=request.XML?.nickname.toString()
-        def password=request.XML?.password.toString()
-        def name=request.XML?.name.toString()
-        def repeatPassword=request.XML?.repeatPassword.toString()
-        def email=request.XML?.email.toString()
-        def bornDate=request.XML?.bornDate.toString() 
-        
-        if(nickname==""){
-            sign.key="0"
-            sign.value="Error, Nickname field can´t be empty"
-            render sign as XML
-        }
-        def player = Player.findByNickname(nickname) 
-        if (player){
-            sign.key="0"
-            sign.value="Error, The nickname already exist in the server"
-            render sign as XML
-            
-        }
-        player = Player.findByEmail(email) 
-        if (player){
-            sign.key="0"
-            sign.value="Error, The email already exist in the server"
-            render sign as XML
-            
-        }
-        if(password==""){
-            sign.key="0"
-            sign.value="Error, Password field can´t be empty"
-            render sign as XML
-        }
-        if(name==""){
-            sign.key="0"
-            sign.value="Error, Name field can´t be empty"
-            render sign as XML
-        }
-        if(repeatPassword==""){
-            sign.key="0"
-            sign.value="Error, Repeat Password field can´t be empty"
-            render sign as XML
-        }
-        if(email==""){
-            sign.key="0"
-            sign.value="Error, Email field can´t be empty"
-            render sign as XML
-        }
-        EmailValidator emailValidator = EmailValidator.getInstance() 
-        if (emailValidator.isValid(email)==false){
-            sign.key="0"
-            sign.value="Error, Email without correct format"
-            render sign as XML
-        }
-        if(bornDate==""){
-            sign.key="0"
-            sign.value="Error, Born Date field can´t be empty"
-            render sign as XML
-        }
-        if (password.equalsIgnoreCase(repeatPassword)){
-            Date date
-            try{
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy")
-                date = formatter.parse(bornDate)                
-            }
-            catch(Exception){
-                sign.key="0"
-                sign.value="Error, invalid date"
-                render sign as XML
-            }
-            try{
-                def user =new Player(name: name,nickname: nickname,password: password,country: "Venezuela",email: email,token: request.getRemoteAddr().toString(),bornDate: date)
-                user.save()
-                sign.key="1"
-                sign.value="User created successfully"
-                render sign as XML
-            }
-            catch(Exception){
-                sign.key="0"
-                sign.value="Error, An error occurred while trying to create the user"
-                render sign as XML
-            }
-        }
-        else{       
-            sign.key="0"
-            sign.value="Error, The passwords should be the same"
-            render sign as XML
-        }
     }
     
     def loginService(){
@@ -311,11 +225,37 @@ class PlayerController {
         if(player){
             player.delete(flush:true)
             response.key="1"
-            response.value="The user was deleted successfully"
+            response.value="The user was successfully removed"
         }
         else{
             response.key="0"
-            response.value="Error, The user wasn't deleted"
+            response.value="Error, The user who tries to delete doesn't exist"
+        }
+        render response as XML
+    }
+    
+    def notificationService(){
+        def nickname = request.XML?.nickname.toString()
+        def value = request.XML?.value.toString()
+        def user=Player.findByNickname(nickname)
+        def response = new Notification()
+        if ((value=="ON")||(value=="OFF")){
+            if (user){
+                user.notification=value
+                response.key="1"
+                if (value=="ON")
+                    response.value="Enabled notifications, from now you will receive email notifications"
+                else
+                    response.value="Disabled notifications , from now you will not receive email notifications"
+            }
+            else{
+                response.key="0"
+                response.value="Error, The user who tries to change the notifications status doesn't exist"
+            }
+        }
+        else{
+            response.key="0"
+            response.value="Error, the notifications can't be changed to enabled or disabled"
         }
         render response as XML
     }
