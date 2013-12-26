@@ -3,7 +3,8 @@ package teacher
 class Player {
  
     String nickname
-    String notification
+    String lastConection
+    
     static constraints = {
     }
     static mapping = {

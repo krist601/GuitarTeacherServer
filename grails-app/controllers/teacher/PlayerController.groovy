@@ -111,6 +111,7 @@ class PlayerController {
         }
     }
     def signInService(){
+        
     }
     
     def loginService(){
@@ -124,7 +125,7 @@ class PlayerController {
                 render log as XML
            }
         else{     
-     def newUser =new Player(nickname: user)
+     def newUser =new Player(nickname: user,notifications:"ON")
                if (newUser.save()){
          
             log.key="1"
@@ -215,7 +216,8 @@ class PlayerController {
             response.setContentType('multipart/form-data')  
         byte[] imageProfile = imageInstance.image 
         response.outputStream << imageProfile  
-        }}
+        }
+    }
         
     } 
     def deleteAccountService(){
@@ -230,32 +232,6 @@ class PlayerController {
         else{
             response.key="0"
             response.value="Error, The user who tries to delete doesn't exist"
-        }
-        render response as XML
-    }
-    
-    def notificationService(){
-        def nickname = request.XML?.nickname.toString()
-        def value = request.XML?.value.toString()
-        def user=Player.findByNickname(nickname)
-        def response = new Notification()
-        if ((value=="ON")||(value=="OFF")){
-            if (user){
-                user.notification=value
-                response.key="1"
-                if (value=="ON")
-                    response.value="Enabled notifications, from now you will receive email notifications"
-                else
-                    response.value="Disabled notifications , from now you will not receive email notifications"
-            }
-            else{
-                response.key="0"
-                response.value="Error, The user who tries to change the notifications status doesn't exist"
-            }
-        }
-        else{
-            response.key="0"
-            response.value="Error, the notifications can't be changed to enabled or disabled"
         }
         render response as XML
     }
