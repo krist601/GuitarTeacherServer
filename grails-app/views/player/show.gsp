@@ -32,6 +32,15 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${playerInstance?.notification}">
+				<li class="fieldcontain">
+					<span id="notification-label" class="property-label"><g:message code="player.notification.label" default="Notification" /></span>
+					
+						<span class="property-value" aria-labelledby="notification-label"><g:fieldValue bean="${playerInstance}" field="notification"/></span>
+					
+				</li>
+				</g:if>
+			
 			</ol>
 			<g:form>
 				<fieldset class="buttons">

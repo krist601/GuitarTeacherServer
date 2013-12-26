@@ -26,6 +26,8 @@
 					
 						<g:sortableColumn property="nickname" title="${message(code: 'player.nickname.label', default: 'Nickname')}" />
 					
+						<g:sortableColumn property="notification" title="${message(code: 'player.notification.label', default: 'Notification')}" />
+					
 					</tr>
 				</thead>
 				<tbody>
@@ -33,6 +35,8 @@
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
 						<td><g:link action="show" id="${playerInstance.id}">${fieldValue(bean: playerInstance, field: "nickname")}</g:link></td>
+					
+						<td>${fieldValue(bean: playerInstance, field: "notification")}</td>
 					
 					</tr>
 				</g:each>
