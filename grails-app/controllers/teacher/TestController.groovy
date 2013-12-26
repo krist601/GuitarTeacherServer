@@ -1,6 +1,8 @@
 package teacher
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.XML
+import Services.ResponseValidation
 
 class TestController {
 
@@ -99,4 +101,26 @@ class TestController {
             redirect(action: "show", id: id)
         }
     }
+    
+        def listTestsByLevelId(){
+           def levelId=request.XML.levelId.toString()
+           def tests = Test.findAll("from Test as t where t.level="+levelId)
+         def validationResponse=new ResponseValidation()   
+        Collections.shuffle(tests)
+               validationResponse.key = "1";
+        validationResponse.value = "Tests";
+        def xmlLista =  tests as XML 
+        def xmlRespuesta = validationResponse as XML 
+        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
+        println(xmlSalida.toString())
+        render xmlSalida
+      
+        
+               
+       }
+      
+        def testById(){
+           def testId=request.XML.testId.toString()
+           def test = Test.get(levelId)
+      }
 }

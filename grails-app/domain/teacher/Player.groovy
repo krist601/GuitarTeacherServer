@@ -3,7 +3,7 @@ package teacher
 class Player {
  
     String nickname
-    String lastConection
+    Date lastConection
     
     static constraints = {
     }

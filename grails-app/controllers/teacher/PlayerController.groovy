@@ -126,7 +126,7 @@ class PlayerController {
                 render log as XML
            }
         else{     
-     def newUser =new Player(nickname: user,notifications:"ON")
+     def newUser =new Player(nickname: user,lastConection:new Date())
                if (newUser.save()){
          
             log.key="1"
