@@ -1,0 +1,17 @@
+package teacher
+
+
+
+import grails.test.mixin.*
+import org.junit.*
+
+/**
+ * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
+ */
+@TestFor(TestType)
+class TestTypeTests {
+
+    void testSomething() {
+       fail "Implement me"
+    }
+}

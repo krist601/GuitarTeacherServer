@@ -109,6 +109,6 @@ fileuploader {
 	}
 }
 
-//grails.plugin.facebooksdk.app.id = 602198353187425
-//grails.plugin.facebooksdk.app.permissions = [manage_friendlists]
-//grails.plugin.facebooksdk.app.secret = 86c67292dfe5507f6f79fc41b6f5776c
+grails.plugin.facebooksdk.app.id = '602198353187425'
+grails.plugin.facebooksdk.app.permissions = ['email']
+grails.plugin.facebooksdk.app.secret = '86c67292dfe5507f6f79fc41b6f5776c'
