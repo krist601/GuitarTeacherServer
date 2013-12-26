@@ -111,6 +111,7 @@ class PlayerController {
         }
     }
     def signInService(){
+        def user = request.XML?.nickname.toString()
         
     }
     
