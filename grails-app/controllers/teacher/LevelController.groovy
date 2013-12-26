@@ -129,15 +129,20 @@ class LevelController {
          def difficulties = new ArrayList<Difficulty>()
         for (level in levels){
             if (level.difficulty!=difficult){
+                if (difficulty!=null)
+                  difficulties << difficulty
+               
                 difficulty = new Difficulty()
                 difficult = level.difficulty 
             difficulty.levels = new ArrayList<Level>()
-                difficulties << difficulty
-               
+            difficulty.difficulty = level.difficulty
+              
             }
             difficulty.levels<<level
             
         }
+           difficulties << difficulty
+               
         def xmlLista =  difficulties as XML 
         def xmlRespuesta = validationResponse as XML 
         def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
@@ -149,6 +154,41 @@ class LevelController {
         // render fri as XML
     }
     
+    
+      
+    def listLevelsGroupByDifficultyServiceDepricated(){
+        def validationResponse=new ResponseValidation()
+        def levels=Level.findAll(sort:"difficulty")
+        validationResponse.key = "1";
+        validationResponse.value = "Levels";
+        def difficult = -1
+        def isFirth = true
+         def difficulties = "<Difficulties>"
+        for (level in levels){
+             println(level as XML)
+            if (level.difficulty!=difficult){
+                if (!isFirth)
+           difficulties += "</Difficulty>"      
+         difficulties += "<Difficulty>"      
+         difficult=level.difficulty
+                isFirth = false
+                
+            }
+            def levelString = level as XML
+        difficulties += (levelString).toString().substring(levelString.toString().indexOf(">")+1)
+        }
+        
+          difficulties += "</Difficulty></Difficulties>"
+        def xmlLista =   difficulties 
+        def xmlRespuesta = validationResponse as XML 
+        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista+"</response>"
+        println(xmlSalida.toString())
+      render(text:xmlSalida,contentType:"text/xml",encoding:"UTF-8")
+        //def bookOutput = new XmlSlurper().parseText(xmlSalida) 
+        // render bookOutput as XML)
+       
+        // render fri as XML
+    }
     /*
      *Este es el metodo que debes modificar KRISTIAN, para cargar toda la ventana
      **/

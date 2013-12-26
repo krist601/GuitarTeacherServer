@@ -1,6 +1,7 @@
 package teacher
-
+import Services.ResponseValidation
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.XML
 
 class AudioController {
 
@@ -98,5 +99,32 @@ class AudioController {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'audio.label', default: 'Audio'), id])
             redirect(action: "show", id: id)
         }
+    }
+    
+     def uploadAudio() {
+        
+        def audio = new Audio()
+        def respuesta = new ResponseValidation()
+        def f = request.getFile('sound')
+        if (f==null){
+                 respuesta.key="0"
+            respuesta.value="Error sending file"
+
+  }else
+        if (f.empty) {
+            respuesta.key="0"
+            respuesta.value="Empty file"
+        }
+      else{    
+        audio.sound=f.getBytes()
+        audio.save()   
+
+            respuesta.key="1"
+            respuesta.value="sound updated"
+            
+        }
+        
+        render respuesta as XML
+        
     }
 }

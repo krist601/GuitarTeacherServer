@@ -123,26 +123,9 @@ class FollowerController {
         def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
         println(xmlSalida.toString())
         render xmlSalida
-        //def bookOutput = new XmlSlurper().parseText(xmlSalida) 
-        // render bookOutput as XML)
        
-        // render fri as XML
     }
-    //    def listFriendsService(){
-    //       // def user = request.XML?.nickname.toString()
-    //       // def usuario = Usuario.findByUserName(user)
-    //      //  if(usuario){
-    ////            List<Friend> friends
-    ////            friends.add()
-    //         //   def fri=Friend.findByUsuario(user)
-    //          //  render fri as XML
-    //       // }
-    //       def user="asd";
-    //       def usuario = Usuario.findByUserName(user)
-    //        def fri=Friend.findByUsuario(usuario)
-    //        
-    //       // render fri as XML
-    //    }
+  
     def uploadProfilePhotoService(String nickName) {
         def player = new Player()
         def respuesta = new ResponseValidation()
