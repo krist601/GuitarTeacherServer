@@ -1,6 +1,7 @@
 package teacher
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.plugin.facebooksdk.FacebookGraphClient
 import Services.ResponseValidation
 import Services.FriendScore
 import grails.converters.XML
