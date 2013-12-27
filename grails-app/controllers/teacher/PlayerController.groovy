@@ -110,13 +110,38 @@ class PlayerController {
             redirect(action: "show", id: id)
         }
     }
-    def signInService(){
-        def nickname = request.XML?.nickname.toString()
+    
+    def loginService(){
+        def user = request.XML?.nickname.toString()
         def userAccessToken = request.XML?.token.toString()
-        def response = new SignIn()
+        def player = Player.findByNickname(user)
+        def response = new Login()
+        if (player) {
+            response.key="1"
+            response.value="Logged Successfully"
+            response.nickname=player.nickname
+        }
+        else{     
+            def newUser =new Player(nickname: user,lastConection:new Date())
+            newUser.save(flush:true)
+                def resp=addFollower(userAccessToken,user)
+                if (resp.equals("0")){
+                    response.key="1"
+                    response.value="User created and logged successfully"
+                }
+                else{
+                    response.key="1"
+                    response.value=resp
+                }
+            }   
+        
+        render response as XML
+    }
+    def addFollower(String userAccessToken,String nickname){
+        def response
         try{
             def facebookClient = new FacebookGraphClient(userAccessToken)
-            String query = "SELECT uid2 FROM friend WHERE uid1= "+nickname.toString()
+            String query = "SELECT uid2 FROM friend WHERE uid1= "+nickname
             def users = facebookClient.executeQuery(query)
             def player2=Player.findByNickname(nickname)
             if(player2){        
@@ -140,48 +165,16 @@ class PlayerController {
                         }
                     }
                 }
-                response.key="1"
-                response.value="New followers successfully added" 
+                response="0" 
             }
             else{
-                response.key="0"
-                response.value="Error, The user id doesn't exist"            
+                response="Error, The user id doesn't exist"            
             }
         }
         catch(Exception){
-                response.key="0"
-                response.value="Error, Facebook's token session has expired"  
+                response="Error, Facebook's token session has expired"  
         }
-        render response as XML
-    }
-    
-    def loginService(){
-        def user = request.XML?.nickname.toString()
-        def player = Player.findByNickname(user)
-        def log = new Login()
-        if (player) {
-                log.key="1"
-                log.value="Logged Successfully"
-                log.nickname=player.nickname
-                render log as XML
-           }
-        else{     
-     def newUser =new Player(nickname: user,lastConection:new Date())
-               if (newUser.save()){
-         
-            log.key="1"
-            log.value="User created and logged successfully"
-            render log as XML
-               }
-               else
-           {
-                log.key="0"
-            log.value="System error"
-            render log as XML
-           
-                
-           }    
-        }
+        return response
     }
 
     def addOrDeleteFriendService(){

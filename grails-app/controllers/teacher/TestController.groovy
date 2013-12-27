@@ -120,9 +120,12 @@ class TestController {
                
        }
       
+        def testById(){
+           def testId=request.XML.testId.toString()
+           def test = Test.get(testId)
+           
+                
             
            }
-           
-       
       
 }
