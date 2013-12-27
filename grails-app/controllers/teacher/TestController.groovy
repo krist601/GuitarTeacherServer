@@ -102,7 +102,7 @@ class TestController {
         }
     }
     
-        def listTestsByLevelIdService(){
+        def listTestsByLevelId(){
            def levelId=request.XML.levelId.toString()
            def countTests=request.XML.count.toString()
            def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
@@ -120,9 +120,12 @@ class TestController {
                
        }
       
+        def testById(){
+           def testId=request.XML.testId.toString()
+           def test = Test.get(testId)
+           
+                
             
            }
-           
-       
       
 }
