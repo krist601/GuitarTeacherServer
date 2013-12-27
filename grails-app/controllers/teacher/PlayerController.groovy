@@ -119,7 +119,6 @@ class PlayerController {
         if (player) {
             response.key="1"
             response.value="Logged Successfully"
-            response.nickname=player.nickname
         }
         else{     
             def newUser =new Player(nickname: user,lastConection:new Date())

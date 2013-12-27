@@ -120,11 +120,36 @@ class TestController {
                
        }
       
-        def testById(){
+        def testByIdTest(){
            def testId=request.XML.testId.toString()
            def test = Test.get(testId)
-           
-                
+           def respuesta = new ResponseValidation()
+        //Esto deberia ser un switch   
+        if (test)
+                {
+//Teoria
+            if (test.testType.id==1)        
+            {
+                if (test.theory){
+                  respuesta.key="1" 
+                  respuesta.value=test.theory.description
+                    render respuesta as XML
+                }
+                else
+                {
+                    respuesta.key="0" 
+                    respuesta.value="Error at the test"
+                    render respuesta as XML
+                }
+            }
+                }else{
+                    respuesta.key="0" 
+                    respuesta.value="Test not found"
+                    render respuesta as XML
+                    
+            
+                }
+                  render respuesta as XML
             
            }
       
