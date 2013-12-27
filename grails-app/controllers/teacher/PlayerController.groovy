@@ -157,7 +157,7 @@ class PlayerController {
     
     def loginService(){
         def user = request.XML?.nickname.toString()
-         def player = Player.findByNickname(user)
+        def player = Player.findByNickname(user)
         def log = new Login()
         if (player) {
                 log.key="1"
