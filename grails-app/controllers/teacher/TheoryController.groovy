@@ -1,6 +1,8 @@
 package teacher
 
 import org.springframework.dao.DataIntegrityViolationException
+import Services.ResponseValidation
+import grails.converters.XML
 
 class TheoryController {
 
@@ -98,5 +100,14 @@ class TheoryController {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'theory.label', default: 'Theory'), id])
             redirect(action: "show", id: id)
         }
+    }
+    
+    def theoryById(){
+        def theoryId=request.XML.theoryId.toString()
+        def theory = Theory.get(theoryId)
+        def respuesta = new ResponseValidation()
+        respuesta.key = "1"
+        respuesta.value=theory.description
+        render respuesta as XML
     }
 }

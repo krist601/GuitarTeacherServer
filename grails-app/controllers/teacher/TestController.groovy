@@ -104,7 +104,8 @@ class TestController {
     
         def listTestsByLevelId(){
            def levelId=request.XML.levelId.toString()
-           def tests = Test.findAll("from Test as t where t.level="+levelId)
+           def countTests=request.XML.count.toString()
+           def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
          def validationResponse=new ResponseValidation()   
         Collections.shuffle(tests)
                validationResponse.key = "1";
@@ -121,6 +122,10 @@ class TestController {
       
         def testById(){
            def testId=request.XML.testId.toString()
-           def test = Test.get(levelId)
-      }
+           def test = Test.get(testId)
+           
+                
+            
+           }
+      
 }
