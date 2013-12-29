@@ -1,8 +1,6 @@
 package teacher
 
 import org.springframework.dao.DataIntegrityViolationException
-import Services.ResponseValidation
-import grails.converters.XML
 
 class TheoryController {
 
@@ -101,6 +99,4 @@ class TheoryController {
             redirect(action: "show", id: id)
         }
     }
-    
-   
 }

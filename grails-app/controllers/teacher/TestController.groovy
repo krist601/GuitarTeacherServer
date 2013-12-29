@@ -2,6 +2,7 @@ package teacher
 
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.XML
+import Services.TestById
 import Services.ResponseValidation
 
 class TestController {
@@ -102,13 +103,14 @@ class TestController {
         }
     }
     
-        def listTestsByLevelIdService(){
-           def levelId=request.XML.levelId.toString()
-           def countTests=request.XML.count.toString()
-           def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
-         def validationResponse=new ResponseValidation()   
+    
+    def listTestsByLevelIdService(){
+        def levelId=request.XML.levelId.toString()
+        def countTests=request.XML.count.toString()
+        def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
+        def validationResponse=new ResponseValidation()   
         Collections.shuffle(tests)
-               validationResponse.key = "1";
+        validationResponse.key = "1";
         validationResponse.value = "Tests";
         def xmlLista =  tests as XML 
         def xmlRespuesta = validationResponse as XML 
@@ -118,39 +120,62 @@ class TestController {
       
         
                
-       }
+    }
       
-        def testByIdTest(){
-           def testId=request.XML.testId.toString()
-           def test = Test.get(testId)
-           def respuesta = new ResponseValidation()
-        //Esto deberia ser un switch   
-        if (test)
-                {
-//Teoria
-            if (test.testType.id==1)        
-            {
-                if (test.theory){
-                  respuesta.key="1" 
-                  respuesta.value=test.theory.description
-                    render respuesta as XML
-                }
-                else
-                {
-                    respuesta.key="0" 
-                    respuesta.value="Error at the test"
-                    render respuesta as XML
+    def testByIdTest(){
+        def testId=request.XML.testId.toString()
+        def test = Test.get(testId)
+        def response = new TestById()
+        if (test) {
+            response.key="0"
+            response.value="successfull"
+            if (test.theory!=null){
+                response.theory=test.theory.description
+            }
+            if (test.question!=null){
+                response.question=test.question.question
+                response.answer=test.question.answer
+            }
+            if (test.image!=null){
+                response.image=test.image.image
+            }
+            if (test.practice!=null){
+                if (test.practice.audio!=null){
+                    response.sound=test.practice.audio.sound
                 }
             }
-                }else{
-                    respuesta.key="0" 
-                    respuesta.value="Test not found"
-                    render respuesta as XML
-                    
+        }
+        else{
+            response.key="1" 
+            response.value="Error, the test with id "+testId+" doesn't exist"
+        }
+//        
+//        //Esto deberia ser un switch   
+//        if (test)
+//        {
+//            //Teoria
+//            if (test.testType.id==1)        
+//            {
+//                if (test.theory){
+//                    respuesta.key="1" 
+//                    respuesta.value=test.theory.description
+//                    render respuesta as XML
+//                }
+//                else
+//                {
+//                    respuesta.key="0" 
+//                    respuesta.value="Error at the test"
+//                    render respuesta as XML
+//                }
+//            }
+//        }else{
+//            respuesta.key="0" 
+//            respuesta.value="Test not found"
+//            render respuesta as XML
+//                    
+//            
+//        }
+        render response as XML
             
-                }
-                  render respuesta as XML
-            
-           }
-      
+    }
 }

@@ -26,13 +26,15 @@
 					
 						<th><g:message code="test.image.label" default="Image" /></th>
 					
-						<th><g:message code="test.practice.label" default="Practice" /></th>
+						<th><g:message code="test.theory.label" default="Theory" /></th>
 					
 						<th><g:message code="test.question.label" default="Question" /></th>
 					
-						<th><g:message code="test.theory.label" default="Theory" /></th>
+						<th><g:message code="test.practice.label" default="Practice" /></th>
 					
-						<g:sortableColumn property="title" title="${message(code: 'test.title.label', default: 'Title')}" />
+						<th><g:message code="test.level.label" default="Level" /></th>
+					
+						<th><g:message code="test.testType.label" default="Test Type" /></th>
 					
 					</tr>
 				</thead>
@@ -42,13 +44,15 @@
 					
 						<td><g:link action="show" id="${testInstance.id}">${fieldValue(bean: testInstance, field: "image")}</g:link></td>
 					
-						<td>${fieldValue(bean: testInstance, field: "practice")}</td>
+						<td>${fieldValue(bean: testInstance, field: "theory")}</td>
 					
 						<td>${fieldValue(bean: testInstance, field: "question")}</td>
 					
-						<td>${fieldValue(bean: testInstance, field: "theory")}</td>
+						<td>${fieldValue(bean: testInstance, field: "practice")}</td>
 					
-						<td>${fieldValue(bean: testInstance, field: "title")}</td>
+						<td>${fieldValue(bean: testInstance, field: "level")}</td>
+					
+						<td>${fieldValue(bean: testInstance, field: "testType")}</td>
 					
 					</tr>
 				</g:each>

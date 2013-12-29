@@ -32,11 +32,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${testInstance?.practice}">
+				<g:if test="${testInstance?.theory}">
 				<li class="fieldcontain">
-					<span id="practice-label" class="property-label"><g:message code="test.practice.label" default="Practice" /></span>
+					<span id="theory-label" class="property-label"><g:message code="test.theory.label" default="Theory" /></span>
 					
-						<span class="property-value" aria-labelledby="practice-label"><g:link controller="practice" action="show" id="${testInstance?.practice?.id}">${testInstance?.practice?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="theory-label"><g:link controller="theory" action="show" id="${testInstance?.theory?.id}">${testInstance?.theory?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
@@ -50,11 +50,29 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${testInstance?.theory}">
+				<g:if test="${testInstance?.practice}">
 				<li class="fieldcontain">
-					<span id="theory-label" class="property-label"><g:message code="test.theory.label" default="Theory" /></span>
+					<span id="practice-label" class="property-label"><g:message code="test.practice.label" default="Practice" /></span>
 					
-						<span class="property-value" aria-labelledby="theory-label"><g:link controller="theory" action="show" id="${testInstance?.theory?.id}">${testInstance?.theory?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="practice-label"><g:link controller="practice" action="show" id="${testInstance?.practice?.id}">${testInstance?.practice?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${testInstance?.level}">
+				<li class="fieldcontain">
+					<span id="level-label" class="property-label"><g:message code="test.level.label" default="Level" /></span>
+					
+						<span class="property-value" aria-labelledby="level-label"><g:link controller="level" action="show" id="${testInstance?.level?.id}">${testInstance?.level?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${testInstance?.testType}">
+				<li class="fieldcontain">
+					<span id="testType-label" class="property-label"><g:message code="test.testType.label" default="Test Type" /></span>
+					
+						<span class="property-value" aria-labelledby="testType-label"><g:link controller="testType" action="show" id="${testInstance?.testType?.id}">${testInstance?.testType?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
