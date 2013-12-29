@@ -102,12 +102,5 @@ class TheoryController {
         }
     }
     
-    def theoryById(){
-        def theoryId=request.XML.theoryId.toString()
-        def theory = Theory.get(theoryId)
-        def respuesta = new ResponseValidation()
-        respuesta.key = "1"
-        respuesta.value=theory.description
-        render respuesta as XML
-    }
+   
 }
