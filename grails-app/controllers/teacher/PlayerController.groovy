@@ -119,12 +119,12 @@ class PlayerController {
         if (player) {
             response.key="1"
             response.value="Logged Successfully"
-            response.nickname=player.nickname
         }
         else{     
             def newUser =new Player(nickname: user,lastConection:new Date())
             newUser.save(flush:true)
-                def resp=addFollower(userAccessToken,user)
+                Follower follower=new Follower()
+                def resp=follower.addFollower(userAccessToken,user)
                 if (resp.equals("0")){
                     response.key="1"
                     response.value="User created and logged successfully"
@@ -137,45 +137,7 @@ class PlayerController {
         
         render response as XML
     }
-    def addFollower(String userAccessToken,String nickname){
-        def response
-        try{
-            def facebookClient = new FacebookGraphClient(userAccessToken)
-            String query = "SELECT uid2 FROM friend WHERE uid1= "+nickname
-            def users = facebookClient.executeQuery(query)
-            def player2=Player.findByNickname(nickname)
-            if(player2){        
-                users.toString().tokenize("],").each{
-                    def spl=it.tokenize('"')
-                    def player=Player.findByNickname(spl[3])
-                    if(player){
-                        def fri=Follower.findByPlayerAndFollower(player,player2)
-                        if(!fri){
-                            def follower =new Follower()
-                            follower.player=player
-                            follower.follower=player2
-                            follower.save()
-                        }
-                        fri=Follower.findByPlayerAndFollower(player2,player)
-                        if(!fri){
-                            def follower2 =new Follower()
-                            follower2.player=player2
-                            follower2.follower=player
-                            follower2.save()
-                        }
-                    }
-                }
-                response="0" 
-            }
-            else{
-                response="Error, The user id doesn't exist"            
-            }
-        }
-        catch(Exception){
-                response="Error, Facebook's token session has expired"  
-        }
-        return response
-    }
+    
 
     def addOrDeleteFriendService(){
        
