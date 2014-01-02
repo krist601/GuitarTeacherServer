@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.XML
 import Services.TestById
 import Services.ResponseValidation
+import Services.VerifyAnswer
 
 class TestController {
 
@@ -122,12 +123,41 @@ class TestController {
                
     }
       
+    def verifyTestByIdTest(){
+        def testId=request.XML.testId.toString()
+        def test = Test.get(testId)
+        def response = new VerifyAnswer()
+        def verification = false
+        if (test) {
+            response.key="1"
+            response.value="successfull"
+            /*
+             *Validate answer required
+             **/
+            if (test.question!=null){
+               verification = true
+            }
+            else{
+               verification = true
+                
+            }
+        }
+        else{
+            response.key="0" 
+            response.value="Error, the test with id "+testId+" doesn't exist"
+        }
+        response.verification = verification
+         render response as XML
+       
+        
+    }
+    
     def testByIdTest(){
         def testId=request.XML.testId.toString()
         def test = Test.get(testId)
         def response = new TestById()
         if (test) {
-            response.key="0"
+            response.key="1"
             response.value="successfull"
             if (test.theory!=null){
                 response.theory=test.theory.description
@@ -146,35 +176,9 @@ class TestController {
             }
         }
         else{
-            response.key="1" 
+            response.key="0" 
             response.value="Error, the test with id "+testId+" doesn't exist"
         }
-//        
-//        //Esto deberia ser un switch   
-//        if (test)
-//        {
-//            //Teoria
-//            if (test.testType.id==1)        
-//            {
-//                if (test.theory){
-//                    respuesta.key="1" 
-//                    respuesta.value=test.theory.description
-//                    render respuesta as XML
-//                }
-//                else
-//                {
-//                    respuesta.key="0" 
-//                    respuesta.value="Error at the test"
-//                    render respuesta as XML
-//                }
-//            }
-//        }else{
-//            respuesta.key="0" 
-//            respuesta.value="Test not found"
-//            render respuesta as XML
-//                    
-//            
-//        }
         render response as XML
             
     }

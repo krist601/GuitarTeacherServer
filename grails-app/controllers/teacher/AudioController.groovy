@@ -127,4 +127,35 @@ class AudioController {
         render respuesta as XML
         
     }
+     def comparatorAudio() { 
+    
+        def audio = Audio.get(5) //5 audio 1
+        def muestra = Audio.get(6) // 6 audio 2
+        def beanSound;
+        render beanSound.comparatorControl(audio,muestra)
+        /*     
+        def audio = new Audio()
+        def respuesta = new ResponseValidation()
+        def f = request.getFile('sound')
+        if (f==null){
+                 respuesta.key="0"
+            respuesta.value="Error sending file"
+
+  }else
+        if (f.empty) {
+            respuesta.key="0"
+            respuesta.value="Empty file"
+        }
+      else{    
+        audio.sound=f.getBytes()
+      //  audio.save()   
+
+            respuesta.key="1"
+            respuesta.value="sound atMemory"+idAudio
+            
+        }
+        
+        render respuesta as XML
+        */
+    }
 }
