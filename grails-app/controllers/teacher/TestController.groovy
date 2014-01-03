@@ -105,11 +105,17 @@ class TestController {
     }
     
     
-    def listTestsByLevelIdService(){
+    def listTestsService(){
         def levelId=request.XML.levelId.toString()
         def countTests=request.XML.count.toString()
+        def nickname=Player.finByNickname(request.XML.nickname.toString())
         def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
-        def validationResponse=new ResponseValidation()   
+        def validationResponse=new ResponseValidation()
+        def score= Score.findByPlayerAndState(nickname,0)
+        if(score){
+            score.delete(flush:true)
+            score.save()
+        }
         Collections.shuffle(tests)
         validationResponse.key = "1";
         validationResponse.value = "Tests";
@@ -117,17 +123,25 @@ class TestController {
         def xmlRespuesta = validationResponse as XML 
         def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
         println(xmlSalida.toString())
-        render xmlSalida
-      
-        
-               
+        render xmlSalida     
     }
       
-    def verifyTestByIdTest(){
+    def verifyTestService(){
         def testId=request.XML.testId.toString()
+        def nickname=Player.finByNickname(request.XML.nickname.toString())
         def test = Test.get(testId)
         def response = new VerifyAnswer()
         def verification = false
+        def score= Score.findByPlayerAndState(nickname,0)
+        if(!score){
+            def score2=new score()
+            score2.player=nickname
+            score2.score=0
+            score2.state=0
+            score2.testNumber=0
+            score2.live=3
+            score2.save(flush:true)
+        }
         if (test) {
             response.key="1"
             response.value="successfull"
@@ -152,7 +166,7 @@ class TestController {
         
     }
     
-    def testByIdTest(){
+    def getTestService(){
         def testId=request.XML.testId.toString()
         def test = Test.get(testId)
         def response = new TestById()
