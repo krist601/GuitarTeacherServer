@@ -2,9 +2,11 @@ package Services
 
 class VerifyAnswer {
     static mapWith = "none"
-    boolean verification
-    int key
+    String key
     String value
+    boolean verification
+    int score
+    
     static constraints = {
     }
 }

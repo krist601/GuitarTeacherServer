@@ -24,9 +24,9 @@
 				<thead>
 					<tr>
 					
-						<g:sortableColumn property="nickname" title="${message(code: 'player.nickname.label', default: 'Nickname')}" />
+						<g:sortableColumn property="lastConection" title="${message(code: 'player.lastConection.label', default: 'Last Conection')}" />
 					
-						<g:sortableColumn property="notification" title="${message(code: 'player.notification.label', default: 'Notification')}" />
+						<g:sortableColumn property="nickname" title="${message(code: 'player.nickname.label', default: 'Nickname')}" />
 					
 					</tr>
 				</thead>
@@ -34,9 +34,9 @@
 				<g:each in="${playerInstanceList}" status="i" var="playerInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${playerInstance.id}">${fieldValue(bean: playerInstance, field: "nickname")}</g:link></td>
+						<td><g:link action="show" id="${playerInstance.id}">${fieldValue(bean: playerInstance, field: "lastConection")}</g:link></td>
 					
-						<td>${fieldValue(bean: playerInstance, field: "notification")}</td>
+						<td>${fieldValue(bean: playerInstance, field: "nickname")}</td>
 					
 					</tr>
 				</g:each>

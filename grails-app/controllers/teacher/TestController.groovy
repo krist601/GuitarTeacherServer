@@ -108,10 +108,11 @@ class TestController {
     def listTestsService(){
         def levelId=request.XML.levelId.toString()
         def countTests=request.XML.count.toString()
-        def nickname=Player.finByNickname(request.XML.nickname.toString())
+        def nickname=Player.findByNickname(request.XML.nickname.toString())
         def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
         def validationResponse=new ResponseValidation()
         def score= Score.findByPlayerAndState(nickname,0)
+        println"toy"
         if(score){
             score.delete(flush:true)
             score.save()
@@ -127,31 +128,59 @@ class TestController {
     }
       
     def verifyTestService(){
-        def testId=request.XML.testId.toString()
-        def nickname=Player.finByNickname(request.XML.nickname.toString())
-        def test = Test.get(testId)
         def response = new VerifyAnswer()
+        //try{
+        def testId=request.XML.testId.toString()
+        def answer=request.XML.answer.toString()
+        def nickname=Player.findByNickname(request.XML.nickname.toString())
+        def test = Test.get(testId)
         def verification = false
         def score= Score.findByPlayerAndState(nickname,0)
         if(!score){
-            def score2=new score()
-            score2.player=nickname
-            score2.score=0
-            score2.state=0
-            score2.testNumber=0
-            score2.live=3
-            score2.save(flush:true)
+            def sco=new Score()
+            sco.player=nickname
+            sco.level=test.level
+            sco.date=new Date()
+            sco.score=0
+            sco.state=0
+            sco.testNumber=0
+            sco.live=3
+            sco.save(flush:true)
+            score=sco
         }
         if (test) {
             response.key="1"
             response.value="successfull"
-            /*
-             *Validate answer required
-             **/
             if (test.question!=null){
-               verification = true
+                //question
+                def asw=Question.get(test.question.id)
+                if (asw){
+                    if(asw.answer==answer){
+                        verification = true
+                        score.score=score.score+1
+                    }
+                    else{
+                        verification = false
+                        score.live=score.live-1
+                    }
+                    score.testNumber=score.testNumber+1
+                    if(score.testNumber==10){
+                        score.score=score.score+score.live
+                        score.state=1
+                        response.score=score.score
+                    }
+                    if(score.live==-1){
+                        score.score=0
+                        score.state=1
+                        response.score=score.score
+                        response.value="looser"
+                    }
+                }
+                else
+                    verification = false
             }
             else{
+               //sonido 
                verification = true
                 
             }
@@ -161,9 +190,16 @@ class TestController {
             response.value="Error, the test with id "+testId+" doesn't exist"
         }
         response.verification = verification
-         render response as XML
+        render response as XML
        
-        
+//        }
+//        catch(Exception){
+//            response.key="0" 
+//            response.value=Exception.toString()
+//            response.verification=false
+//            render response as XML
+//            
+//        }
     }
     
     def getTestService(){

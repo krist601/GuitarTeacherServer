@@ -23,20 +23,20 @@
 			</g:if>
 			<ol class="property-list player">
 			
+				<g:if test="${playerInstance?.lastConection}">
+				<li class="fieldcontain">
+					<span id="lastConection-label" class="property-label"><g:message code="player.lastConection.label" default="Last Conection" /></span>
+					
+						<span class="property-value" aria-labelledby="lastConection-label"><g:formatDate date="${playerInstance?.lastConection}" /></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${playerInstance?.nickname}">
 				<li class="fieldcontain">
 					<span id="nickname-label" class="property-label"><g:message code="player.nickname.label" default="Nickname" /></span>
 					
 						<span class="property-value" aria-labelledby="nickname-label"><g:fieldValue bean="${playerInstance}" field="nickname"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${playerInstance?.notification}">
-				<li class="fieldcontain">
-					<span id="notification-label" class="property-label"><g:message code="player.notification.label" default="Notification" /></span>
-					
-						<span class="property-value" aria-labelledby="notification-label"><g:fieldValue bean="${playerInstance}" field="notification"/></span>
 					
 				</li>
 				</g:if>
