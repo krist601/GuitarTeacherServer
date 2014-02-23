@@ -6,5 +6,6 @@ class Question {
     
     static belongsTo = [audio: Audio]
     static constraints = {
+        audio nullable: true
     }
 }
