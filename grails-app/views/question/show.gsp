@@ -23,6 +23,24 @@
 			</g:if>
 			<ol class="property-list question">
 			
+				<g:if test="${questionInstance?.image}">
+				<li class="fieldcontain">
+					<span id="image-label" class="property-label"><g:message code="question.image.label" default="Image" /></span>
+					
+						<span class="property-value" aria-labelledby="image-label"><g:link controller="image" action="show" id="${questionInstance?.image?.id}">${questionInstance?.image?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${questionInstance?.audio}">
+				<li class="fieldcontain">
+					<span id="audio-label" class="property-label"><g:message code="question.audio.label" default="Audio" /></span>
+					
+						<span class="property-value" aria-labelledby="audio-label"><g:link controller="audio" action="show" id="${questionInstance?.audio?.id}">${questionInstance?.audio?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${questionInstance?.answer}">
 				<li class="fieldcontain">
 					<span id="answer-label" class="property-label"><g:message code="question.answer.label" default="Answer" /></span>

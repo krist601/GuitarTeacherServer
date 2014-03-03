@@ -28,9 +28,11 @@
 					
 						<g:sortableColumn property="difficulty" title="${message(code: 'level.difficulty.label', default: 'Difficulty')}" />
 					
-						<th><g:message code="level.image.label" default="Image" /></th>
-					
 						<g:sortableColumn property="name" title="${message(code: 'level.name.label', default: 'Name')}" />
+					
+						<th><g:message code="level.normal.label" default="Normal" /></th>
+					
+						<th><g:message code="level.success.label" default="Success" /></th>
 					
 					</tr>
 				</thead>
@@ -42,9 +44,11 @@
 					
 						<td>${fieldValue(bean: levelInstance, field: "difficulty")}</td>
 					
-						<td>${fieldValue(bean: levelInstance, field: "image")}</td>
-					
 						<td>${fieldValue(bean: levelInstance, field: "name")}</td>
+					
+						<td>${fieldValue(bean: levelInstance, field: "normal")}</td>
+					
+						<td>${fieldValue(bean: levelInstance, field: "success")}</td>
 					
 					</tr>
 				</g:each>

@@ -30,6 +30,24 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${imageInstance?.question}">
+				<li class="fieldcontain">
+					<span id="question-label" class="property-label"><g:message code="image.question.label" default="Question" /></span>
+					
+						<span class="property-value" aria-labelledby="question-label"><g:link controller="question" action="show" id="${imageInstance?.question?.id}">${imageInstance?.question?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${imageInstance?.name}">
+				<li class="fieldcontain">
+					<span id="name-label" class="property-label"><g:message code="image.name.label" default="Name" /></span>
+					
+						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${imageInstance}" field="name"/></span>
+					
+				</li>
+				</g:if>
+			
 			</ol>
 			<g:form>
 				<fieldset class="buttons">

@@ -4,8 +4,9 @@ class Question {
     String question
     String answer
     
-    static belongsTo = [audio: Audio]
+    static belongsTo = [audio: Audio, image: Image]
     static constraints = {
+        image nullable: true
         audio nullable: true
     }
 }

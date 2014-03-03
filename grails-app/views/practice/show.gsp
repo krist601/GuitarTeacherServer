@@ -23,6 +23,15 @@
 			</g:if>
 			<ol class="property-list practice">
 			
+				<g:if test="${practiceInstance?.image}">
+				<li class="fieldcontain">
+					<span id="image-label" class="property-label"><g:message code="practice.image.label" default="Image" /></span>
+					
+						<span class="property-value" aria-labelledby="image-label"><g:link controller="image" action="show" id="${practiceInstance?.image?.id}">${practiceInstance?.image?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${practiceInstance?.audio}">
 				<li class="fieldcontain">
 					<span id="audio-label" class="property-label"><g:message code="practice.audio.label" default="Audio" /></span>

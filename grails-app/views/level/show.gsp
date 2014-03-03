@@ -41,20 +41,29 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${levelInstance?.image}">
-				<li class="fieldcontain">
-					<span id="image-label" class="property-label"><g:message code="level.image.label" default="Image" /></span>
-					
-						<span class="property-value" aria-labelledby="image-label"><g:link controller="image" action="show" id="${levelInstance?.image?.id}">${levelInstance?.image?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
 				<g:if test="${levelInstance?.name}">
 				<li class="fieldcontain">
 					<span id="name-label" class="property-label"><g:message code="level.name.label" default="Name" /></span>
 					
 						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${levelInstance}" field="name"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${levelInstance?.normal}">
+				<li class="fieldcontain">
+					<span id="normal-label" class="property-label"><g:message code="level.normal.label" default="Normal" /></span>
+					
+						<span class="property-value" aria-labelledby="normal-label"><g:link controller="image" action="show" id="${levelInstance?.normal?.id}">${levelInstance?.normal?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${levelInstance?.success}">
+				<li class="fieldcontain">
+					<span id="success-label" class="property-label"><g:message code="level.success.label" default="Success" /></span>
+					
+						<span class="property-value" aria-labelledby="success-label"><g:link controller="image" action="show" id="${levelInstance?.success?.id}">${levelInstance?.success?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

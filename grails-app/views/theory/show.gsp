@@ -23,11 +23,38 @@
 			</g:if>
 			<ol class="property-list theory">
 			
+				<g:if test="${theoryInstance?.audio}">
+				<li class="fieldcontain">
+					<span id="audio-label" class="property-label"><g:message code="theory.audio.label" default="Audio" /></span>
+					
+						<span class="property-value" aria-labelledby="audio-label"><g:link controller="audio" action="show" id="${theoryInstance?.audio?.id}">${theoryInstance?.audio?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${theoryInstance?.image}">
+				<li class="fieldcontain">
+					<span id="image-label" class="property-label"><g:message code="theory.image.label" default="Image" /></span>
+					
+						<span class="property-value" aria-labelledby="image-label"><g:link controller="image" action="show" id="${theoryInstance?.image?.id}">${theoryInstance?.image?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${theoryInstance?.description}">
 				<li class="fieldcontain">
 					<span id="description-label" class="property-label"><g:message code="theory.description.label" default="Description" /></span>
 					
 						<span class="property-value" aria-labelledby="description-label"><g:fieldValue bean="${theoryInstance}" field="description"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${theoryInstance?.name}">
+				<li class="fieldcontain">
+					<span id="name-label" class="property-label"><g:message code="theory.name.label" default="Name" /></span>
+					
+						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${theoryInstance}" field="name"/></span>
 					
 				</li>
 				</g:if>

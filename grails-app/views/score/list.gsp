@@ -28,9 +28,13 @@
 					
 						<th><g:message code="score.level.label" default="Level" /></th>
 					
+						<g:sortableColumn property="live" title="${message(code: 'score.live.label', default: 'Live')}" />
+					
 						<th><g:message code="score.player.label" default="Player" /></th>
 					
 						<g:sortableColumn property="score" title="${message(code: 'score.score.label', default: 'Score')}" />
+					
+						<g:sortableColumn property="state" title="${message(code: 'score.state.label', default: 'State')}" />
 					
 					</tr>
 				</thead>
@@ -42,9 +46,13 @@
 					
 						<td>${fieldValue(bean: scoreInstance, field: "level")}</td>
 					
+						<td>${fieldValue(bean: scoreInstance, field: "live")}</td>
+					
 						<td>${fieldValue(bean: scoreInstance, field: "player")}</td>
 					
 						<td>${fieldValue(bean: scoreInstance, field: "score")}</td>
+					
+						<td>${fieldValue(bean: scoreInstance, field: "state")}</td>
 					
 					</tr>
 				</g:each>

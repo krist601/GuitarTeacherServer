@@ -24,6 +24,8 @@
 				<thead>
 					<tr>
 					
+						<th><g:message code="practice.image.label" default="Image" /></th>
+					
 						<th><g:message code="practice.audio.label" default="Audio" /></th>
 					
 						<g:sortableColumn property="name" title="${message(code: 'practice.name.label', default: 'Name')}" />
@@ -36,7 +38,9 @@
 				<g:each in="${practiceInstanceList}" status="i" var="practiceInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${practiceInstance.id}">${fieldValue(bean: practiceInstance, field: "audio")}</g:link></td>
+						<td><g:link action="show" id="${practiceInstance.id}">${fieldValue(bean: practiceInstance, field: "image")}</g:link></td>
+					
+						<td>${fieldValue(bean: practiceInstance, field: "audio")}</td>
 					
 						<td>${fieldValue(bean: practiceInstance, field: "name")}</td>
 					

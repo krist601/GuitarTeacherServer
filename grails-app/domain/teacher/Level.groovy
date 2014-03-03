@@ -5,9 +5,8 @@ class Level {
     String name
     Integer difficulty
     String description
+    static belongsTo = [normal: Image, success: Image]
     
-    static belongsTo = [image: Image]
     static constraints = {
-          image nullable: true
     }
 }

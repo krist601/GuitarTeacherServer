@@ -24,7 +24,13 @@
 				<thead>
 					<tr>
 					
+						<th><g:message code="theory.audio.label" default="Audio" /></th>
+					
+						<th><g:message code="theory.image.label" default="Image" /></th>
+					
 						<g:sortableColumn property="description" title="${message(code: 'theory.description.label', default: 'Description')}" />
+					
+						<g:sortableColumn property="name" title="${message(code: 'theory.name.label', default: 'Name')}" />
 					
 					</tr>
 				</thead>
@@ -32,7 +38,13 @@
 				<g:each in="${theoryInstanceList}" status="i" var="theoryInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${theoryInstance.id}">${fieldValue(bean: theoryInstance, field: "description")}</g:link></td>
+						<td><g:link action="show" id="${theoryInstance.id}">${fieldValue(bean: theoryInstance, field: "audio")}</g:link></td>
+					
+						<td>${fieldValue(bean: theoryInstance, field: "image")}</td>
+					
+						<td>${fieldValue(bean: theoryInstance, field: "description")}</td>
+					
+						<td>${fieldValue(bean: theoryInstance, field: "name")}</td>
 					
 					</tr>
 				</g:each>

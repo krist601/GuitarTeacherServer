@@ -41,6 +41,15 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${scoreInstance?.live}">
+				<li class="fieldcontain">
+					<span id="live-label" class="property-label"><g:message code="score.live.label" default="Live" /></span>
+					
+						<span class="property-value" aria-labelledby="live-label"><g:fieldValue bean="${scoreInstance}" field="live"/></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${scoreInstance?.player}">
 				<li class="fieldcontain">
 					<span id="player-label" class="property-label"><g:message code="score.player.label" default="Player" /></span>
@@ -55,6 +64,24 @@
 					<span id="score-label" class="property-label"><g:message code="score.score.label" default="Score" /></span>
 					
 						<span class="property-value" aria-labelledby="score-label"><g:fieldValue bean="${scoreInstance}" field="score"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${scoreInstance?.state}">
+				<li class="fieldcontain">
+					<span id="state-label" class="property-label"><g:message code="score.state.label" default="State" /></span>
+					
+						<span class="property-value" aria-labelledby="state-label"><g:fieldValue bean="${scoreInstance}" field="state"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${scoreInstance?.testNumber}">
+				<li class="fieldcontain">
+					<span id="testNumber-label" class="property-label"><g:message code="score.testNumber.label" default="Test Number" /></span>
+					
+						<span class="property-value" aria-labelledby="testNumber-label"><g:fieldValue bean="${scoreInstance}" field="testNumber"/></span>
 					
 				</li>
 				</g:if>
