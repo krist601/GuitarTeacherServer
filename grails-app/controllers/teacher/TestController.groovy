@@ -5,14 +5,11 @@ import grails.converters.XML
 import Services.TestById
 import Services.ResponseValidation
 import Services.VerifyAnswer
-import comparadordesonido.SoundEngine
 
 class TestController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-    
- 
     def index() {
         redirect(action: "list", params: params)
     }
@@ -132,14 +129,10 @@ class TestController {
       
     def verifyTestService(){
         def response = new VerifyAnswer()
-
-        def validationResponse=new ResponseValidation()
-     
-        def req = new XmlSlurper().parseText(request.getParameter("xml_id"))
-        //def req = request.getParameter("xml_id") as XML
-        def testId=req.testId.text()
-        println(testId)
-        def nickname=Player.findByNickname(req.nickname.toString())
+        //try{
+        def testId=request.XML.testId.toString()
+        def answer=request.XML.answer.toString()
+        def nickname=Player.findByNickname(request.XML.nickname.toString())
         def test = Test.get(testId)
         def verification = false
         def score= Score.findByPlayerAndState(nickname,0)
@@ -156,13 +149,12 @@ class TestController {
             score=sco
         }
         if (test) {
-        validationResponse.key = "1";
-        validationResponse.value = "successfull";
+            response.key="1"
+            response.value="successfull"
             if (test.question!=null){
                 //question
                 def asw=Question.get(test.question.id)
                 if (asw){
-                     def answer=req.answer.toString()
                     if(asw.answer==answer){
                         verification = true
                         score.score=score.score+1
@@ -187,54 +179,37 @@ class TestController {
                 else
                     verification = false
             }
-            else{ 
-       
-            if (test.practice!=null){
-                 def soundClient=request.getFile('mp3')
-                 def soundClientBytes=soundClient.getBytes()
-                 
-               def engine = new SoundEngine()
-               
-                    println(engine.decodeMp3(test.practice.audio.sound,soundClientBytes))
-                }
-                //sonido 
+            else{
+               //sonido 
                verification = true
                 
             }
         }
         else{
-        validationResponse.key = "0";
-        validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+            response.key="0" 
+            response.value="Error, the test with id "+testId+" doesn't exist"
         }
-     
-           def xmlLista =  response as XML 
-        def xmlRespuesta = validationResponse as XML 
-        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
-     render xmlSalida
+        response.verification = verification
+        render response as XML
+       
+//        }
+//        catch(Exception){
+//            response.key="0" 
+//            response.value=Exception.toString()
+//            response.verification=false
+//            render response as XML
+//            
+//        }
     }
-    
-    
-   def testRecognizer(){
-     //  println("dsasadasds"+ Audio.get("11").sound.length())
-       def engine = new SoundEngine()
-       def test1  = Audio.get(12);
-       def test2  = Audio.get(13);
-       def test3  = Audio.get(14);
-        engine.decodeMp3(test1.sound,test2.sound)
-          engine.decodeMp3(test2.sound,test1.sound)
-        engine.decodeMp3(test3.sound,test1.sound)
-     
-   }
     
     def getTestService(){
         def testId=request.XML.testId.toString()
         def test = Test.get(testId)
-        def validationResponse=new ResponseValidation()
         def response = new TestById()
         if (test) {
-        validationResponse.key = "1";
-        validationResponse.value = "successfull";
-           if (test.theory!=null){
+            response.key="1"
+            response.value="successfull"
+            if (test.theory!=null){
                 response.theory=test.theory.description
             }
             if (test.question!=null){
@@ -251,14 +226,10 @@ class TestController {
             }
         }
         else{
-        
-        validationResponse.key = "0";
-        validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+            response.key="0" 
+            response.value="Error, the test with id "+testId+" doesn't exist"
         }
-           def xmlLista =  response as XML 
-        def xmlRespuesta = validationResponse as XML 
-        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
-     render xmlSalida
+        render response as XML
             
     }
 }
