@@ -9,4 +9,7 @@ class Question {
         image nullable: true
         audio nullable: true
     }
+ String toString(){
+        return "${question}"
+    }
 }

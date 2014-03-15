@@ -28,6 +28,8 @@
 					
 						<g:sortableColumn property="difficulty" title="${message(code: 'level.difficulty.label', default: 'Difficulty')}" />
 					
+						<th><g:message code="level.disabled.label" default="Disabled" /></th>
+					
 						<g:sortableColumn property="name" title="${message(code: 'level.name.label', default: 'Name')}" />
 					
 						<th><g:message code="level.normal.label" default="Normal" /></th>
@@ -43,6 +45,8 @@
 						<td><g:link action="show" id="${levelInstance.id}">${fieldValue(bean: levelInstance, field: "description")}</g:link></td>
 					
 						<td>${fieldValue(bean: levelInstance, field: "difficulty")}</td>
+					
+						<td>${fieldValue(bean: levelInstance, field: "disabled")}</td>
 					
 						<td>${fieldValue(bean: levelInstance, field: "name")}</td>
 					

@@ -18,6 +18,14 @@
 	<g:field name="difficulty" type="number" value="${levelInstance.difficulty}" required=""/>
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: levelInstance, field: 'disabled', 'error')} required">
+	<label for="disabled">
+		<g:message code="level.disabled.label" default="Disabled" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:select id="disabled" name="disabled.id" from="${teacher.Image.list()}" optionKey="id" required="" value="${levelInstance?.disabled?.id}" class="many-to-one"/>
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: levelInstance, field: 'name', 'error')} ">
 	<label for="name">
 		<g:message code="level.name.label" default="Name" />

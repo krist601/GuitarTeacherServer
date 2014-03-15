@@ -10,4 +10,7 @@ class Theory {
         image nullable: true
         description(size:1..1000)
     }
+ String toString(){
+        return "${name}"
+    }
 }

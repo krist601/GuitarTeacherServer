@@ -41,6 +41,15 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${levelInstance?.disabled}">
+				<li class="fieldcontain">
+					<span id="disabled-label" class="property-label"><g:message code="level.disabled.label" default="Disabled" /></span>
+					
+						<span class="property-value" aria-labelledby="disabled-label"><g:link controller="image" action="show" id="${levelInstance?.disabled?.id}">${levelInstance?.disabled?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${levelInstance?.name}">
 				<li class="fieldcontain">
 					<span id="name-label" class="property-label"><g:message code="level.name.label" default="Name" /></span>
