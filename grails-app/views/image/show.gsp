@@ -26,7 +26,9 @@
 				<g:if test="${imageInstance?.image}">
 				<li class="fieldcontain">
 					<span id="image-label" class="property-label"><g:message code="image.image.label" default="Image" /></span>
-					
+					<g:link action="showImage" id="${imageInstance.id}">${fieldValue(bean: imageInstance, field: "id")}
+                                <img alt="img" src="http://localhost:8080/iTeacher/image/showImage/${imageInstance.id}">
+                              </g:link>
 				</li>
 				</g:if>
 			

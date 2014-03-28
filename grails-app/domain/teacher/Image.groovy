@@ -10,4 +10,7 @@ class Image {
         image type:'blob'
         question nullable: true
     }
+     String toString(){
+        return "${name}"
+    }
 }

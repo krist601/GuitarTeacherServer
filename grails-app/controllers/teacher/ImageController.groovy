@@ -140,6 +140,11 @@ class ImageController {
         render respuesta as XML
         
     }
+    def showImage = {
+        def imagen = Image.get( params.id )
+        response.outputStream << imagen.screenshot
+        response.outputStream.flush()
+    }
 } 
     
 
