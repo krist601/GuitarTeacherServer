@@ -24,3 +24,43 @@
 				<thead>
 					<tr>
 					
+						<th><g:message code="test.theory.label" default="Theory" /></th>
+					
+						<th><g:message code="test.question.label" default="Question" /></th>
+					
+						<th><g:message code="test.nota.label" default="Nota" /></th>
+					
+						<th><g:message code="test.ritmica.label" default="Ritmica" /></th>
+					
+						<th><g:message code="test.acorde.label" default="Acorde" /></th>
+					
+						<th><g:message code="test.level.label" default="Level" /></th>
+					
+					</tr>
+				</thead>
+				<tbody>
+				<g:each in="${testInstanceList}" status="i" var="testInstance">
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					
+						<td><g:link action="show" id="${testInstance.id}">${fieldValue(bean: testInstance, field: "theory")}</g:link></td>
+					
+						<td>${fieldValue(bean: testInstance, field: "question")}</td>
+					
+						<td>${fieldValue(bean: testInstance, field: "nota")}</td>
+					
+						<td>${fieldValue(bean: testInstance, field: "ritmica")}</td>
+					
+						<td>${fieldValue(bean: testInstance, field: "acorde")}</td>
+					
+						<td>${fieldValue(bean: testInstance, field: "level")}</td>
+					
+					</tr>
+				</g:each>
+				</tbody>
+			</table>
+			<div class="pagination">
+				<g:paginate total="${testInstanceTotal}" />
+			</div>
+		</div>
+	</body>
+</html>

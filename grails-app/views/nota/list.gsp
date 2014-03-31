@@ -24,8 +24,6 @@
 				<thead>
 					<tr>
 					
-						<th><g:message code="nota.audio.label" default="Audio" /></th>
-					
 						<g:sortableColumn property="frecuencia" title="${message(code: 'nota.frecuencia.label', default: 'Frecuencia')}" />
 					
 						<g:sortableColumn property="name" title="${message(code: 'nota.name.label', default: 'Name')}" />
@@ -36,9 +34,7 @@
 				<g:each in="${notaInstanceList}" status="i" var="notaInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${notaInstance.id}">${fieldValue(bean: notaInstance, field: "audio")}</g:link></td>
-					
-						<td>${fieldValue(bean: notaInstance, field: "frecuencia")}</td>
+						<td><g:link action="show" id="${notaInstance.id}">${fieldValue(bean: notaInstance, field: "frecuencia")}</g:link></td>
 					
 						<td>${fieldValue(bean: notaInstance, field: "name")}</td>
 					

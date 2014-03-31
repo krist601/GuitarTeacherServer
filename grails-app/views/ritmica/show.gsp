@@ -23,20 +23,18 @@
 			</g:if>
 			<ol class="property-list ritmica">
 			
-				<g:if test="${ritmicaInstance?.audio}">
-				<li class="fieldcontain">
-					<span id="audio-label" class="property-label"><g:message code="ritmica.audio.label" default="Audio" /></span>
-					
-						<span class="property-value" aria-labelledby="audio-label"><g:link controller="audio" action="show" id="${ritmicaInstance?.audio?.id}">${ritmicaInstance?.audio?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
 				<g:if test="${ritmicaInstance?.frecuencia}">
 				<li class="fieldcontain">
 					<span id="frecuencia-label" class="property-label"><g:message code="ritmica.frecuencia.label" default="Frecuencia" /></span>
 					
-						<span class="property-value" aria-labelledby="frecuencia-label"><g:fieldValue bean="${ritmicaInstance}" field="frecuencia"/></span>
+				</li>
+				</g:if>
+			
+				<g:if test="${ritmicaInstance?.image}">
+				<li class="fieldcontain">
+					<span id="image-label" class="property-label"><g:message code="ritmica.image.label" default="Image" /></span>
+					
+						<span class="property-value" aria-labelledby="image-label"><g:link controller="image" action="show" id="${ritmicaInstance?.image?.id}">${ritmicaInstance?.image?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
@@ -54,16 +52,12 @@
 				<li class="fieldcontain">
 					<span id="rango-label" class="property-label"><g:message code="ritmica.rango.label" default="Rango" /></span>
 					
-						<span class="property-value" aria-labelledby="rango-label"><g:fieldValue bean="${ritmicaInstance}" field="rango"/></span>
-					
 				</li>
 				</g:if>
 			
 				<g:if test="${ritmicaInstance?.tiempo}">
 				<li class="fieldcontain">
 					<span id="tiempo-label" class="property-label"><g:message code="ritmica.tiempo.label" default="Tiempo" /></span>
-					
-						<span class="property-value" aria-labelledby="tiempo-label"><g:fieldValue bean="${ritmicaInstance}" field="tiempo"/></span>
 					
 				</li>
 				</g:if>

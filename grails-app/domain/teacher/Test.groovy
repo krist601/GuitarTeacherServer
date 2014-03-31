@@ -5,7 +5,6 @@ class Test {
     
     static belongsTo = [theory: Theory,question: Question,level: Level,testType: TestType, acorde: Acorde, ritmica: Ritmica, nota: Nota]
     static constraints = {
-        image nullable: true
         theory nullable: true
         question nullable: true
         nota nullable: true

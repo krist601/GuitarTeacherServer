@@ -24,9 +24,9 @@
 				<thead>
 					<tr>
 					
-						<th><g:message code="ritmica.audio.label" default="Audio" /></th>
-					
 						<g:sortableColumn property="frecuencia" title="${message(code: 'ritmica.frecuencia.label', default: 'Frecuencia')}" />
+					
+						<th><g:message code="ritmica.image.label" default="Image" /></th>
 					
 						<g:sortableColumn property="name" title="${message(code: 'ritmica.name.label', default: 'Name')}" />
 					
@@ -40,9 +40,9 @@
 				<g:each in="${ritmicaInstanceList}" status="i" var="ritmicaInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${ritmicaInstance.id}">${fieldValue(bean: ritmicaInstance, field: "audio")}</g:link></td>
+						<td><g:link action="show" id="${ritmicaInstance.id}">${fieldValue(bean: ritmicaInstance, field: "frecuencia")}</g:link></td>
 					
-						<td>${fieldValue(bean: ritmicaInstance, field: "frecuencia")}</td>
+						<td>${fieldValue(bean: ritmicaInstance, field: "image")}</td>
 					
 						<td>${fieldValue(bean: ritmicaInstance, field: "name")}</td>
 					

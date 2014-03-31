@@ -23,15 +23,6 @@
 			</g:if>
 			<ol class="property-list nota">
 			
-				<g:if test="${notaInstance?.audio}">
-				<li class="fieldcontain">
-					<span id="audio-label" class="property-label"><g:message code="nota.audio.label" default="Audio" /></span>
-					
-						<span class="property-value" aria-labelledby="audio-label"><g:link controller="audio" action="show" id="${notaInstance?.audio?.id}">${notaInstance?.audio?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
 				<g:if test="${notaInstance?.frecuencia}">
 				<li class="fieldcontain">
 					<span id="frecuencia-label" class="property-label"><g:message code="nota.frecuencia.label" default="Frecuencia" /></span>

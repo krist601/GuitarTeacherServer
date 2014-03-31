@@ -2,20 +2,12 @@
 
 
 
-<div class="fieldcontain ${hasErrors(bean: acordeInstance, field: 'audio', 'error')} ">
-	<label for="audio">
-		<g:message code="acorde.audio.label" default="Audio" />
-		
-	</label>
-	<g:select id="audio" name="audio.id" from="${teacher.Audio.list()}" optionKey="id" value="${acordeInstance?.audio?.id}" class="many-to-one" noSelection="['null': '']"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: acordeInstance, field: 'frecuencia', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: acordeInstance, field: 'frecuencia', 'error')} required">
 	<label for="frecuencia">
 		<g:message code="acorde.frecuencia.label" default="Frecuencia" />
-		
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="frecuencia" value="${acordeInstance?.frecuencia}"/>
+	
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: acordeInstance, field: 'name', 'error')} ">
@@ -26,11 +18,11 @@
 	<g:textField name="name" value="${acordeInstance?.name}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: acordeInstance, field: 'rango', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: acordeInstance, field: 'rango', 'error')} required">
 	<label for="rango">
 		<g:message code="acorde.rango.label" default="Rango" />
-		
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="rango" value="${acordeInstance?.rango}"/>
+	
 </div>
 

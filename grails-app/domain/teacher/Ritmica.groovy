@@ -6,9 +6,11 @@ class Ritmica {
     double[] frecuencia
     double[] rango
     
-    static belongsTo = [audio: Audio]
+    static belongsTo = [image: Image]
     static constraints = {
-        audio nullable: true
+        tiempo nullable: true
+        frecuencia nullable: true
+        rango nullable: true
     }
     String toString(){
         return "${name}"

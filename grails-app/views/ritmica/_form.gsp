@@ -2,20 +2,20 @@
 
 
 
-<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'audio', 'error')} ">
-	<label for="audio">
-		<g:message code="ritmica.audio.label" default="Audio" />
-		
-	</label>
-	<g:select id="audio" name="audio.id" from="${teacher.Audio.list()}" optionKey="id" value="${ritmicaInstance?.audio?.id}" class="many-to-one" noSelection="['null': '']"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'frecuencia', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'frecuencia', 'error')} required">
 	<label for="frecuencia">
 		<g:message code="ritmica.frecuencia.label" default="Frecuencia" />
-		
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="frecuencia" value="${ritmicaInstance?.frecuencia}"/>
+	
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'image', 'error')} required">
+	<label for="image">
+		<g:message code="ritmica.image.label" default="Image" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:select id="image" name="image.id" from="${teacher.Image.list()}" optionKey="id" required="" value="${ritmicaInstance?.image?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'name', 'error')} ">
@@ -26,19 +26,19 @@
 	<g:textField name="name" value="${ritmicaInstance?.name}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'rango', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'rango', 'error')} required">
 	<label for="rango">
 		<g:message code="ritmica.rango.label" default="Rango" />
-		
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="rango" value="${ritmicaInstance?.rango}"/>
+	
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'tiempo', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: ritmicaInstance, field: 'tiempo', 'error')} required">
 	<label for="tiempo">
 		<g:message code="ritmica.tiempo.label" default="Tiempo" />
-		
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="tiempo" value="${ritmicaInstance?.tiempo}"/>
+	
 </div>
 

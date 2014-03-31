@@ -23,20 +23,9 @@
 			</g:if>
 			<ol class="property-list acorde">
 			
-				<g:if test="${acordeInstance?.audio}">
-				<li class="fieldcontain">
-					<span id="audio-label" class="property-label"><g:message code="acorde.audio.label" default="Audio" /></span>
-					
-						<span class="property-value" aria-labelledby="audio-label"><g:link controller="audio" action="show" id="${acordeInstance?.audio?.id}">${acordeInstance?.audio?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
 				<g:if test="${acordeInstance?.frecuencia}">
 				<li class="fieldcontain">
 					<span id="frecuencia-label" class="property-label"><g:message code="acorde.frecuencia.label" default="Frecuencia" /></span>
-					
-						<span class="property-value" aria-labelledby="frecuencia-label"><g:fieldValue bean="${acordeInstance}" field="frecuencia"/></span>
 					
 				</li>
 				</g:if>
@@ -53,8 +42,6 @@
 				<g:if test="${acordeInstance?.rango}">
 				<li class="fieldcontain">
 					<span id="rango-label" class="property-label"><g:message code="acorde.rango.label" default="Rango" /></span>
-					
-						<span class="property-value" aria-labelledby="rango-label"><g:fieldValue bean="${acordeInstance}" field="rango"/></span>
 					
 				</li>
 				</g:if>

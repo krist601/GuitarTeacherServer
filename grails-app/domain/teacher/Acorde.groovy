@@ -5,9 +5,9 @@ class Acorde {
     double[] frecuencia
     double[] rango
     
-    static belongsTo = [audio: Audio]
     static constraints = {
-        audio nullable: true
+        frecuencia nullable: true
+        rango nullable: true
     }
     String toString(){
         return "${name}"

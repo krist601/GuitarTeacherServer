@@ -24,8 +24,6 @@
 				<thead>
 					<tr>
 					
-						<th><g:message code="acorde.audio.label" default="Audio" /></th>
-					
 						<g:sortableColumn property="frecuencia" title="${message(code: 'acorde.frecuencia.label', default: 'Frecuencia')}" />
 					
 						<g:sortableColumn property="name" title="${message(code: 'acorde.name.label', default: 'Name')}" />
@@ -38,9 +36,7 @@
 				<g:each in="${acordeInstanceList}" status="i" var="acordeInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${acordeInstance.id}">${fieldValue(bean: acordeInstance, field: "audio")}</g:link></td>
-					
-						<td>${fieldValue(bean: acordeInstance, field: "frecuencia")}</td>
+						<td><g:link action="show" id="${acordeInstance.id}">${fieldValue(bean: acordeInstance, field: "frecuencia")}</g:link></td>
 					
 						<td>${fieldValue(bean: acordeInstance, field: "name")}</td>
 					
