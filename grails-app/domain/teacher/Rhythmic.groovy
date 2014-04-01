@@ -2,15 +2,15 @@ package teacher
 
 class Rhythmic {
     String name
-    double[] tiempo
-    double[] frecuencia
-    double[] rango
+    double[] time
+    double[] frequency
+    double[] range
     
     static belongsTo = [image: Image]
     static constraints = {
-        tiempo nullable: true
-        frecuencia nullable: true
-        rango nullable: true
+        time nullable: true
+        frequency nullable: true
+        range nullable: true
     }
     String toString(){
         return "${name}"

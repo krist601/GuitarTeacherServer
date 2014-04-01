@@ -1,13 +1,13 @@
 package teacher
 
-class Acorde {
+class Chord {
     String name
     double[] frecuencia
     double[] rango
     
     static constraints = {
-        frecuencia nullable: true
-        rango nullable: true
+        frequency nullable: true
+        range nullable: true
     }
     String toString(){
         return "${name}"

@@ -1,6 +1,6 @@
 package teacher
 
-class Nota {
+class Note {
     String name
     String frecuencia
     

@@ -2,7 +2,7 @@ package teacher
 
 import org.springframework.dao.DataIntegrityViolationException
 
-class RitmicaController {
+class RhythmicController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -12,15 +12,15 @@ class RitmicaController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        [ritmicaInstanceList: Ritmica.list(params), ritmicaInstanceTotal: Ritmica.count()]
+        [ritmicaInstanceList: Rhythmic.list(params), ritmicaInstanceTotal: Ritmica.count()]
     }
 
     def create() {
-        [ritmicaInstance: new Ritmica(params)]
+        [ritmicaInstance: new Rhythmic(params)]
     }
 
     def save() {
-        def ritmicaInstance = new Ritmica(params)
+        def ritmicaInstance = new Rhythmic(params)
         if (!ritmicaInstance.save(flush: true)) {
             render(view: "create", model: [ritmicaInstance: ritmicaInstance])
             return
@@ -31,7 +31,7 @@ class RitmicaController {
     }
 
     def show(Long id) {
-        def ritmicaInstance = Ritmica.get(id)
+        def ritmicaInstance = Rhythmic.get(id)
         if (!ritmicaInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'ritmica.label', default: 'Ritmica'), id])
             redirect(action: "list")
@@ -42,7 +42,7 @@ class RitmicaController {
     }
 
     def edit(Long id) {
-        def ritmicaInstance = Ritmica.get(id)
+        def ritmicaInstance = Rhythmic.get(id)
         if (!ritmicaInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'ritmica.label', default: 'Ritmica'), id])
             redirect(action: "list")
@@ -53,7 +53,7 @@ class RitmicaController {
     }
 
     def update(Long id, Long version) {
-        def ritmicaInstance = Ritmica.get(id)
+        def ritmicaInstance = Rhythmic.get(id)
         if (!ritmicaInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'ritmica.label', default: 'Ritmica'), id])
             redirect(action: "list")
@@ -82,7 +82,7 @@ class RitmicaController {
     }
 
     def delete(Long id) {
-        def ritmicaInstance = Ritmica.get(id)
+        def ritmicaInstance = Rhythmic.get(id)
         if (!ritmicaInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'ritmica.label', default: 'Ritmica'), id])
             redirect(action: "list")
