@@ -2,7 +2,7 @@ package teacher
 
 class Note {
     String name
-    String frecuencia
+    String frequency
     
     static constraints = {
     }

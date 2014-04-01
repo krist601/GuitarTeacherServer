@@ -2,8 +2,8 @@ package teacher
 
 class Chord {
     String name
-    double[] frecuencia
-    double[] rango
+    double[] frequency
+    double[] range
     
     static constraints = {
         frequency nullable: true

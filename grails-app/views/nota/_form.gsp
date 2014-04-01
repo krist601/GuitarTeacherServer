@@ -1,20 +1,20 @@
-<%@ page import="teacher.Nota" %>
+<%@ page import="teacher.Note" %>
 
 
 
-<div class="fieldcontain ${hasErrors(bean: notaInstance, field: 'frecuencia', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: noteInstance, field: 'frecuencia', 'error')} ">
 	<label for="frecuencia">
-		<g:message code="nota.frecuencia.label" default="Frecuencia" />
+		<g:message code="note.frecuencia.label" default="Frecuencia" />
 		
 	</label>
-	<g:textField name="frecuencia" value="${notaInstance?.frecuencia}"/>
+	<g:textField name="frecuencia" value="${noteInstance?.frecuencia}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: notaInstance, field: 'name', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: noteInstance, field: 'name', 'error')} ">
 	<label for="name">
-		<g:message code="nota.name.label" default="Name" />
+		<g:message code="note.name.label" default="Name" />
 		
 	</label>
-	<g:textField name="name" value="${notaInstance?.name}"/>
+	<g:textField name="name" value="${noteInstance?.name}"/>
 </div>
 

@@ -41,11 +41,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${testInstance?.nota}">
+				<g:if test="${testInstance?.note}">
 				<li class="fieldcontain">
-					<span id="nota-label" class="property-label"><g:message code="test.nota.label" default="Nota" /></span>
+					<span id="note-label" class="property-label"><g:message code="test.note.label" default="Note" /></span>
 					
-						<span class="property-value" aria-labelledby="nota-label"><g:link controller="nota" action="show" id="${testInstance?.nota?.id}">${testInstance?.nota?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="note-label"><g:link controller="note" action="show" id="${testInstance?.note?.id}">${testInstance?.note?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

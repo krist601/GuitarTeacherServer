@@ -28,7 +28,7 @@
 					
 						<th><g:message code="test.question.label" default="Question" /></th>
 					
-						<th><g:message code="test.nota.label" default="Nota" /></th>
+						<th><g:message code="test.note.label" default="Note" /></th>
 					
 						<th><g:message code="test.ritmica.label" default="Ritmica" /></th>
 					
@@ -46,7 +46,7 @@
 					
 						<td>${fieldValue(bean: testInstance, field: "question")}</td>
 					
-						<td>${fieldValue(bean: testInstance, field: "nota")}</td>
+						<td>${fieldValue(bean: testInstance, field: "note")}</td>
 					
 						<td>${fieldValue(bean: testInstance, field: "ritmica")}</td>
 					

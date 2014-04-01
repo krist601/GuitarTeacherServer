@@ -18,12 +18,12 @@
 	<g:select id="question" name="question.id" from="${teacher.Question.list()}" optionKey="id" value="${testInstance?.question?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: testInstance, field: 'nota', 'error')} ">
-	<label for="nota">
-		<g:message code="test.nota.label" default="Nota" />
+<div class="fieldcontain ${hasErrors(bean: testInstance, field: 'note', 'error')} ">
+	<label for="note">
+		<g:message code="test.note.label" default="Note" />
 		
 	</label>
-	<g:select id="nota" name="nota.id" from="${teacher.Nota.list()}" optionKey="id" value="${testInstance?.nota?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="note" name="note.id" from="${teacher.Note.list()}" optionKey="id" value="${testInstance?.note?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: testInstance, field: 'ritmica', 'error')} ">

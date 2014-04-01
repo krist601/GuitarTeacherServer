@@ -3,13 +3,13 @@ package teacher
 class Test {
     String title
     
-    static belongsTo = [theory: Theory,question: Question,level: Level,testType: TestType, acorde: Acorde, rhythmic: Rhythmic, nota: Nota]
+    static belongsTo = [theory: Theory,question: Question,level: Level,testType: TestType, chord: Chord, rhythmic: Rhythmic, note: Note]
     static constraints = {
         theory nullable: true
         question nullable: true
-        nota nullable: true
+        note nullable: true
         rhythmic nullable: true
-        acorde nullable: true
+        chord nullable: true
     }
     
 }
