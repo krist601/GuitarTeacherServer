@@ -137,7 +137,7 @@ class LevelController {
             difficulty.levels = new ArrayList<Level>()
             difficulty.difficulty = level.difficulty
               
-            }
+            }  //Verificar si el usuario paso o no -> Comentar como tiene que ser state en level
             difficulty.levels<<level
             
         }
@@ -165,8 +165,7 @@ class LevelController {
         def isFirth = true
          def difficulties = "<Difficulties>"
         for (level in levels){
-             println(level as XML)
-            if (level.difficulty!=difficult){
+             if (level.difficulty!=difficult){
                 if (!isFirth)
            difficulties += "</Difficulty>"      
          difficulties += "<Difficulty>"      

@@ -4,7 +4,9 @@ import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.XML
 import Services.TestById
 import Services.ResponseValidation
+import Services.ScoreResult
 import Services.VerifyAnswer
+import comparadordesonido.SoundEngine
 
 class TestController {
 
@@ -67,7 +69,7 @@ class TestController {
         if (version != null) {
             if (testInstance.version > version) {
                 testInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'test.label', default: 'Test')] as Object[],
+                    [message(code: 'test.label', default: 'Test')] as Object[],
                           "Another user has updated this Test while you were editing")
                 render(view: "edit", model: [testInstance: testInstance])
                 return
@@ -111,12 +113,7 @@ class TestController {
         def nickname=Player.findByNickname(request.XML.nickname.toString())
         def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
         def validationResponse=new ResponseValidation()
-        def score= Score.findByPlayerAndState(nickname,0)
         println"toy"
-        if(score){
-            score.delete(flush:true)
-            score.save()
-        }
         Collections.shuffle(tests)
         validationResponse.key = "1";
         validationResponse.value = "Tests";
@@ -129,107 +126,280 @@ class TestController {
       
     def verifyTestService(){
         def response = new VerifyAnswer()
-        //try{
+        
+        def validationResponse=new ResponseValidation()
+     
+       
+        //def req = request.getParameter("xml_id") as XML
         def testId=request.XML.testId.toString()
-        def answer=request.XML.answer.toString()
-        def nickname=Player.findByNickname(request.XML.nickname.toString())
+        def sessionActive=request.XML.session.toString()
+        println(testId)
+        def player=Player.findByNickname(request.XML.nickname.toString())
         def test = Test.get(testId)
         def verification = false
-        def score= Score.findByPlayerAndState(nickname,0)
-        if(!score){
-            def sco=new Score()
-            sco.player=nickname
-            sco.level=test.level
-            sco.date=new Date()
-            sco.score=0
-            sco.state=0
-            sco.testNumber=0
-            sco.live=3
-            sco.save(flush:true)
-            score=sco
-        }
+        def score= Score.findByPlayerAndStateAndSession(player,0,Integer.parseInt(sessionActive))
         if (test) {
-            response.key="1"
-            response.value="successfull"
+            validationResponse.key = "1";
+            validationResponse.value = "successfull";
+            if(!score){
+                def sco=new Score()
+                sco.player=player
+                sco.level=test.level
+                sco.date=new Date()
+                sco.score=0
+                sco.state=0
+                sco.testNumber=0
+                sco.live=3
+                sco.save(flush:true)
+                sco.session=Score.count()+1
+                response.session=sco.session
+                score=sco
+            
+            }
+               if (score.lastTest!=test.id)
+            {  score.testNumber=score.testNumber+1
+            }else{
+                score.score=score.score-score.lastGain
+            }
             if (test.question!=null){
                 //question
                 def asw=Question.get(test.question.id)
                 if (asw){
+                    score.lastTest=test.id
+                    def answer=request.XML.answer.toString()
                     if(asw.answer==answer){
                         verification = true
-                        score.score=score.score+1
+                        score.score=score.score+10
+                        score.lastGain=10
                     }
                     else{
                         verification = false
                         score.live=score.live-1
                     }
-                    score.testNumber=score.testNumber+1
-                    if(score.testNumber==10){
-                        score.score=score.score+score.live
-                        score.state=1
-                        response.score=score.score
-                    }
-                    if(score.live==-1){
+                
+                    if(score.live==0){
                         score.score=0
                         score.state=1
                         response.score=score.score
-                        response.value="looser"
+                        response.value="Debes intentarlo de nuevo"
+                     
                     }
+                    
                 }
                 else
-                    verification = false
+                verification = false
+            }else
+            if (test.theory!=null){
+                score.lastGain = 0
+                score.lastTest=test.id
+                response.session=score.session
             }
-            else{
-               //sonido 
-               verification = true
-                
-            }
+         
+
+            response.live=score.live
+            score.save()
+        
         }
         else{
-            response.key="0" 
-            response.value="Error, the test with id "+testId+" doesn't exist"
+            validationResponse.key = "0";
+            validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
         }
-        response.verification = verification
-        render response as XML
-       
-//        }
-//        catch(Exception){
-//            response.key="0" 
-//            response.value=Exception.toString()
-//            response.verification=false
-//            render response as XML
-//            
-//        }
+    
+        def xmlLista =  response as XML 
+        def xmlRespuesta = validationResponse as XML 
+        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
+        render xmlSalida
+    }
+    
+    def verifyTestWithFileService(){
+        def response = new VerifyAnswer()
+        
+        def validationResponse=new ResponseValidation()
+     
+        def req = new XmlSlurper().parseText(request.getParameter("xml_id"))
+        //def req = request.getParameter("xml_id") as XML
+        def testId=req.testId.text()
+        def sessionActive=req.session.text()
+        println(testId)
+        def player=Player.findByNickname(req.nickname.text())
+        def test = Test.get(testId)
+        def verification = false
+        def score= Score.findByPlayerAndStateAndSession(player,0,Integer.parseInt(sessionActive))
+        if (test) {
+            validationResponse.key = "1";
+            validationResponse.value = "successfull";
+            if(!score){
+                def sco=new Score()
+                sco.player=player
+                sco.level=test.level
+                sco.date=new Date()
+                sco.score=0
+                sco.state=0
+                sco.testNumber=0
+                sco.live=3
+                sco.save(flush:true)
+                sco.session=Score.count()+1
+                response.session=sco.session
+                score=sco
+            
+            }
+               if (score.lastTest!=test.id)
+            {  score.testNumber=score.testNumber+1
+            }else{
+                score.score=score.score-score.lastGain
+            }
+            if (test.practice!=null){
+                  score.lastTest=test.id
+                def soundClient=request.getFile('mp3')
+                def soundClientBytes=soundClient.getBytes()
+                 
+                def engine = new SoundEngine()
+                def correlation = Math.round(engine.decodeMp3(test.practice.audio.sound,soundClientBytes)*100)
+                score.score=score.score+correlation
+                  score.lastGain=correlation
+                if (correlation>89)
+                response.value = "Excelente"
+                else if (correlation>59)
+                response.value = "Buen intento"
+                else if (correlation>39)
+                response.value = "Tu puedes hacerlo mejor!"
+                else if (correlation>0)
+                response.value = "Vuelve a intentarlo, tu puedes mejorar"
+                verification = true
+            }
+            //sonido 
+            score.save()
+        
+        }
+        else{
+            validationResponse.key = "0";
+            validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+        }
+    
+        def xmlLista =  response as XML 
+        def xmlRespuesta = validationResponse as XML 
+        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
+        render xmlSalida
+    }
+    
+    def commitResultTest(){
+          def response = new ScoreResult()
+          def validationResponse=new ResponseValidation()
+        def sessionActive=request.XML.session.text()
+        def player=Player.findByNickname(request.XML.nickname.toString())
+        def level=Level.get(request.XML.level.toString())
+        def score= Score.findByPlayerAndStateAndSessionAndLevel(player,0,Integer.parseInt(sessionActive),level)
+        if (score) { 
+            validationResponse.key = "1";
+            validationResponse.value = "successfull";
+        if(score.testNumber==8){
+            score.score=score.score+(score.live*10)
+            score.state=1
+            response.live=score.live
+            response.score=score.score
+              score.save()
+        }
+    
+    } else{
+            validationResponse.key = "0";
+            validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+        }
+        
+           def xmlLista =  response as XML 
+        def xmlRespuesta = validationResponse as XML 
+        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
+        render xmlSalida
+        
+    }
+    
+    def testList(){
+        def levels=Image.findAll(){
+            question == Question.get(202)
+        }
+        render levels as XML
+    }
+    
+    def testRecognizer(){
+        //  println("dsasadasds"+ Audio.get("11").sound.length())
+        def engine = new SoundEngine()
+        def test1  = Audio.get(12)
+        def test2  = Audio.get(13)
+        def test3  = Audio.get(14)
+        engine.decodeMp3(test1.sound,test2.sound)
+        engine.decodeMp3(test2.sound,test1.sound)
+        engine.decodeMp3(test3.sound,test1.sound)
+     
     }
     
     def getTestService(){
         def testId=request.XML.testId.toString()
         def test = Test.get(testId)
+        def xmlSalida = ""
+        def xmlImages = ""
+        def validationResponse=new ResponseValidation()
         def response = new TestById()
         if (test) {
-            response.key="1"
-            response.value="successfull"
-            if (test.theory!=null){
-                response.theory=test.theory.description
+            validationResponse.key = "1";
+            validationResponse.value = "successfull";
+            println("test type : "+test.testType.id)
+            if (test.testType.id==1){//Pregunta-Imagen
+                response.question=test.question.question
+                response.image=test.question.image.image
+                response.answer=test.question.answer
             }
-            if (test.question!=null){
+            if (test.testType.id==2){//Pregunta-Respuesta-Imagen
+                
+                def images=Image.findAll(){
+                    question == Question.get(test.question.id)
+                }
+                    
+                response.question=test.question.question
+                response.answer=test.question.answer
+                xmlImages = images as XML
+    
+                xmlImages=xmlImages.toString().substring(xmlImages.toString().indexOf(">")+1)
+
+            }
+            if (test.testType.id==4){
+                response.theory=test.theory.description
+                response.title=test.theory.name
+                println("Tipo 4")
+            }
+            if (test.testType.id==6){
+                response.image=test.theory.image.image
+                response.theory=test.theory.description
+                response.title=test.theory.name
+            }
+            if (test.testType.id==7){
+                response.image=test.theory.image.image
+                response.theory=test.theory.description
+                response.title=test.theory.name
+                response.sound=test.practice.audio.sound
+                response.instruction=test.practice.name
+            }
+            if (test.testType.id==5){
+                response.image=test.practice.image.image
+                response.instruction=test.practice.name
+            }
+            if (test.testType.id==3){
                 response.question=test.question.question
                 response.answer=test.question.answer
             }
-            if (test.image!=null){
-                response.image=test.image.image
-            }
-            if (test.practice!=null){
-                if (test.practice.audio!=null){
-                    response.sound=test.practice.audio.sound
-                }
-            }
+            def xmlLista =  response as XML 
+            def xmlRespuesta = validationResponse as XML 
+       
+            xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+xmlImages+"</response>"
+
         }
         else{
-            response.key="0" 
-            response.value="Error, the test with id "+testId+" doesn't exist"
+        
+            validationResponse.key = "0";
+            validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+            def xmlRespuesta = validationResponse as XML 
+            xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+"</response>"
+  
         }
-        render response as XML
+        render xmlSalida
             
     }
 }
