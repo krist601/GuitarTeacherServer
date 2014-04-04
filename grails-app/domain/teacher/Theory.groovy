@@ -3,8 +3,7 @@ package teacher
 class Theory {
     String name
     String description
-    
-    static belongsTo = [image: Image]
+    static belongsTo = [image: Image,audio: Audio]
     static constraints = {
         image nullable: true
         description(size:1..1000)

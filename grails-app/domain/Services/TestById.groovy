@@ -7,6 +7,7 @@ class TestById {
     String theory
     String question
     String answer
+    String times
     byte[] image
     byte[] sound
     

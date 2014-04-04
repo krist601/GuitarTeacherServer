@@ -331,7 +331,7 @@ class TestController {
      
     }
     
-    def getTestService(){
+    def getTestServiceDepricated(){
         def testId=request.XML.testId.toString()
         def test = Test.get(testId)
         def xmlSalida = ""
@@ -385,6 +385,97 @@ class TestController {
                 response.question=test.question.question
                 response.answer=test.question.answer
             }
+            def xmlLista =  response as XML 
+            def xmlRespuesta = validationResponse as XML 
+       
+            xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+xmlImages+"</response>"
+
+        }
+        else{
+        
+            validationResponse.key = "0";
+            validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+            def xmlRespuesta = validationResponse as XML 
+            xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+"</response>"
+  
+        }
+        render xmlSalida
+            
+    }
+    
+     
+    def getTestService(){
+        def testId=request.XML.testId.toString()
+        def test = Test.get(testId)
+        def xmlSalida = ""
+        def xmlImages = ""
+        def validationResponse=new ResponseValidation()
+        def response = new TestById()
+        if (test) {
+            validationResponse.key = "1";
+            validationResponse.value = "successfull";
+            println("test type : "+test.testType.id)
+            if (test.testType.id==1){//Pregunta-Imagen 1
+                response.question=test.question.question
+                response.image=test.question.image.image
+                response.answer=test.question.answer
+            }
+            if (test.testType.id==2){//Pregunta-Respuesta-Imagen 2
+                
+                def images=Image.findAll(){
+                    question == Question.get(test.question.id)
+                }
+                    
+                response.question=test.question.question
+                response.answer=test.question.answer
+                xmlImages = images as XML
+    
+                xmlImages=xmlImages.toString().substring(xmlImages.toString().indexOf(">")+1)
+
+            }
+              if (test.testType.id==3){//3
+                response.question=test.question.question
+                response.answer=test.question.answer
+            }
+            if (test.testType.id==4){//4
+                response.theory=test.theory.description
+                response.title=test.theory.name
+                println("Tipo 4")
+            }
+              if (test.testType.id==8 || test.testType.id==10 || test.testType.id==12){//8
+                response.image=test.theory.image.image
+                 if (test.testType.id==8)
+                response.instruction=test.note.name
+               if (test.testType.id==10)
+                response.instruction=test.chord.name
+               if (test.testType.id==12){
+                response.instruction=test.rhythmic.name
+                response.times=test.rhythmic.time
+                }
+            }
+            if (test.testType.id==6){//6
+                response.image=test.theory.image.image
+                response.theory=test.theory.description
+                response.title=test.theory.name
+            }
+            if (test.testType.id==7 || test.testType.id==9 || test.testType.id==11){//7 note
+                response.image=test.theory.image.image
+                response.theory=test.theory.description
+                response.title=test.theory.name
+                response.sound=test.theory.audio.sound
+               if (test.testType.id==7)
+                response.instruction=test.note.name
+               if (test.testType.id==9)
+                response.instruction=test.chord.name
+               if (test.testType.id==11){
+                response.instruction=test.rhythmic.name
+                response.times=test.rhythmic.time
+                }
+                
+            }
+            
+          
+          
             def xmlLista =  response as XML 
             def xmlRespuesta = validationResponse as XML 
        
