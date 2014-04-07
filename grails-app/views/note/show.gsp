@@ -23,11 +23,11 @@
 			</g:if>
 			<ol class="property-list note">
 			
-				<g:if test="${noteInstance?.frecuencia}">
+				<g:if test="${noteInstance?.frequency}">
 				<li class="fieldcontain">
-					<span id="frecuencia-label" class="property-label"><g:message code="note.frecuencia.label" default="Frecuencia" /></span>
+					<span id="frequency-label" class="property-label"><g:message code="note.frequency.label" default="Frequency" /></span>
 					
-						<span class="property-value" aria-labelledby="frecuencia-label"><g:fieldValue bean="${noteInstance}" field="frecuencia"/></span>
+						<span class="property-value" aria-labelledby="frequency-label"><g:fieldValue bean="${noteInstance}" field="frequency"/></span>
 					
 				</li>
 				</g:if>
@@ -37,6 +37,15 @@
 					<span id="name-label" class="property-label"><g:message code="note.name.label" default="Name" /></span>
 					
 						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${noteInstance}" field="name"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${noteInstance?.range}">
+				<li class="fieldcontain">
+					<span id="range-label" class="property-label"><g:message code="note.range.label" default="Range" /></span>
+					
+						<span class="property-value" aria-labelledby="range-label"><g:fieldValue bean="${noteInstance}" field="range"/></span>
 					
 				</li>
 				</g:if>

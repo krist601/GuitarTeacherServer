@@ -50,20 +50,20 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${testInstance?.ritmica}">
+				<g:if test="${testInstance?.rhythmic}">
 				<li class="fieldcontain">
-					<span id="ritmica-label" class="property-label"><g:message code="test.ritmica.label" default="Ritmica" /></span>
+					<span id="rhythmic-label" class="property-label"><g:message code="test.rhythmic.label" default="Rhythmic" /></span>
 					
-						<span class="property-value" aria-labelledby="ritmica-label"><g:link controller="ritmica" action="show" id="${testInstance?.ritmica?.id}">${testInstance?.ritmica?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="rhythmic-label"><g:link controller="rhythmic" action="show" id="${testInstance?.rhythmic?.id}">${testInstance?.rhythmic?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
 			
-				<g:if test="${testInstance?.acorde}">
+				<g:if test="${testInstance?.chord}">
 				<li class="fieldcontain">
-					<span id="acorde-label" class="property-label"><g:message code="test.acorde.label" default="Acorde" /></span>
+					<span id="chord-label" class="property-label"><g:message code="test.chord.label" default="Chord" /></span>
 					
-						<span class="property-value" aria-labelledby="acorde-label"><g:link controller="acorde" action="show" id="${testInstance?.acorde?.id}">${testInstance?.acorde?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="chord-label"><g:link controller="chord" action="show" id="${testInstance?.chord?.id}">${testInstance?.chord?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

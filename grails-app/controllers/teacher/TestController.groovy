@@ -415,12 +415,41 @@ class TestController {
             validationResponse.key = "1";
             validationResponse.value = "successfull";
             println("test type : "+test.testType.id)
-            if (test.testType.id==1){//Pregunta-Imagen 1
+            if (test.testType.id==1){//Teoría
+                response.theory=test.theory.description
+                response.title=test.theory.name
+            }
+            if (test.testType.id==2){//Teoría-Imagen
+                response.image=test.theory.image.image
+                response.theory=test.theory.description
+                response.title=test.theory.name
+            }
+             
+            if (test.testType.id==3 || test.testType.id==4 || test.testType.id==5){//Teoría-Imagen-Audio-Practica
+                response.image=test.theory.image.image
+                response.theory=test.theory.description
+                response.title=test.theory.name
+                response.sound=test.theory.audio.sound
+               if (test.testType.id==3)
+                response.instruction=test.note.name
+               if (test.testType.id==4)
+                response.instruction=test.chord.name
+               if (test.testType.id==5){
+                response.instruction=test.rhythmic.name
+                response.times=test.rhythmic.time
+                }
+                
+            }
+            if (test.testType.id==6){//pregunta
+                response.question=test.question.question
+                response.answer=test.question.answer
+            }
+            if (test.testType.id==7){//Pregunta-Imagen
                 response.question=test.question.question
                 response.image=test.question.image.image
                 response.answer=test.question.answer
             }
-            if (test.testType.id==2){//Pregunta-Respuesta-Imagen 2
+            if (test.testType.id==8){//Pregunta-Respuesta con Imagen
                 
                 def images=Image.findAll(){
                     question == Question.get(test.question.id)
@@ -433,49 +462,18 @@ class TestController {
                 xmlImages=xmlImages.toString().substring(xmlImages.toString().indexOf(">")+1)
 
             }
-              if (test.testType.id==3){//3
-                response.question=test.question.question
-                response.answer=test.question.answer
-            }
-            if (test.testType.id==4){//4
-                response.theory=test.theory.description
-                response.title=test.theory.name
-                println("Tipo 4")
-            }
-              if (test.testType.id==8 || test.testType.id==10 || test.testType.id==12){//8
+              if (test.testType.id==9 || test.testType.id==10 || test.testType.id==11){//practica
                 response.image=test.theory.image.image
-                 if (test.testType.id==8)
+                 if (test.testType.id==9)
                 response.instruction=test.note.name
                if (test.testType.id==10)
-                response.instruction=test.chord.name
-               if (test.testType.id==12){
-                response.instruction=test.rhythmic.name
-                response.times=test.rhythmic.time
-                }
-            }
-            if (test.testType.id==6){//6
-                response.image=test.theory.image.image
-                response.theory=test.theory.description
-                response.title=test.theory.name
-            }
-            if (test.testType.id==7 || test.testType.id==9 || test.testType.id==11){//7 note
-                response.image=test.theory.image.image
-                response.theory=test.theory.description
-                response.title=test.theory.name
-                response.sound=test.theory.audio.sound
-               if (test.testType.id==7)
-                response.instruction=test.note.name
-               if (test.testType.id==9)
                 response.instruction=test.chord.name
                if (test.testType.id==11){
                 response.instruction=test.rhythmic.name
                 response.times=test.rhythmic.time
                 }
-                
             }
             
-          
-          
             def xmlLista =  response as XML 
             def xmlRespuesta = validationResponse as XML 
        

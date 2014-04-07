@@ -30,9 +30,9 @@
 					
 						<th><g:message code="test.note.label" default="Note" /></th>
 					
-						<th><g:message code="test.ritmica.label" default="Ritmica" /></th>
+						<th><g:message code="test.rhythmic.label" default="Rhythmic" /></th>
 					
-						<th><g:message code="test.acorde.label" default="Acorde" /></th>
+						<th><g:message code="test.chord.label" default="Chord" /></th>
 					
 						<th><g:message code="test.level.label" default="Level" /></th>
 					
@@ -48,9 +48,9 @@
 					
 						<td>${fieldValue(bean: testInstance, field: "note")}</td>
 					
-						<td>${fieldValue(bean: testInstance, field: "ritmica")}</td>
+						<td>${fieldValue(bean: testInstance, field: "rhythmic")}</td>
 					
-						<td>${fieldValue(bean: testInstance, field: "acorde")}</td>
+						<td>${fieldValue(bean: testInstance, field: "chord")}</td>
 					
 						<td>${fieldValue(bean: testInstance, field: "level")}</td>
 					

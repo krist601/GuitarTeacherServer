@@ -24,9 +24,11 @@
 				<thead>
 					<tr>
 					
-						<g:sortableColumn property="frecuencia" title="${message(code: 'note.frecuencia.label', default: 'Frecuencia')}" />
+						<g:sortableColumn property="frequency" title="${message(code: 'note.frequency.label', default: 'Frequency')}" />
 					
 						<g:sortableColumn property="name" title="${message(code: 'note.name.label', default: 'Name')}" />
+					
+						<g:sortableColumn property="range" title="${message(code: 'note.range.label', default: 'Range')}" />
 					
 					</tr>
 				</thead>
@@ -34,9 +36,11 @@
 				<g:each in="${noteInstanceList}" status="i" var="noteInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${noteInstance.id}">${fieldValue(bean: noteInstance, field: "frecuencia")}</g:link></td>
+						<td><g:link action="show" id="${noteInstance.id}">${fieldValue(bean: noteInstance, field: "frequency")}</g:link></td>
 					
 						<td>${fieldValue(bean: noteInstance, field: "name")}</td>
+					
+						<td>${fieldValue(bean: noteInstance, field: "range")}</td>
 					
 					</tr>
 				</g:each>

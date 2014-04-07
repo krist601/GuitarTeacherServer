@@ -26,20 +26,20 @@
 	<g:select id="note" name="note.id" from="${teacher.Note.list()}" optionKey="id" value="${testInstance?.note?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: testInstance, field: 'ritmica', 'error')} ">
-	<label for="ritmica">
-		<g:message code="test.ritmica.label" default="Ritmica" />
+<div class="fieldcontain ${hasErrors(bean: testInstance, field: 'rhythmic', 'error')} ">
+	<label for="rhythmic">
+		<g:message code="test.rhythmic.label" default="Rhythmic" />
 		
 	</label>
-	<g:select id="ritmica" name="ritmica.id" from="${teacher.Ritmica.list()}" optionKey="id" value="${testInstance?.ritmica?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="rhythmic" name="rhythmic.id" from="${teacher.Rhythmic.list()}" optionKey="id" value="${testInstance?.rhythmic?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: testInstance, field: 'acorde', 'error')} ">
-	<label for="acorde">
-		<g:message code="test.acorde.label" default="Acorde" />
+<div class="fieldcontain ${hasErrors(bean: testInstance, field: 'chord', 'error')} ">
+	<label for="chord">
+		<g:message code="test.chord.label" default="Chord" />
 		
 	</label>
-	<g:select id="acorde" name="acorde.id" from="${teacher.Acorde.list()}" optionKey="id" value="${testInstance?.acorde?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="chord" name="chord.id" from="${teacher.Chord.list()}" optionKey="id" value="${testInstance?.chord?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: testInstance, field: 'level', 'error')} required">

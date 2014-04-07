@@ -26,6 +26,8 @@
 					
 						<g:sortableColumn property="sound" title="${message(code: 'audio.sound.label', default: 'Sound')}" />
 					
+						<g:sortableColumn property="name" title="${message(code: 'audio.name.label', default: 'Name')}" />
+					
 					</tr>
 				</thead>
 				<tbody>
@@ -33,6 +35,8 @@
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
 						<td><g:link action="show" id="${audioInstance.id}">${fieldValue(bean: audioInstance, field: "sound")}</g:link></td>
+					
+						<td>${fieldValue(bean: audioInstance, field: "name")}</td>
 					
 					</tr>
 				</g:each>
