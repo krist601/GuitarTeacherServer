@@ -6,6 +6,7 @@ import grails.plugin.facebooksdk.FacebookGraphClient
 class Follower {
   static belongsTo = [player: Player, follower: Player]
     static constraints = {
+        player unique: 'follower'
     }
     
     def addFollower(String userAccessToken,String nickname){

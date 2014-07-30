@@ -112,15 +112,18 @@ class PlayerController {
     }
     
     def loginService(){
+        println "entre de una"
         def user = request.XML?.nickname.toString()
         def userAccessToken = request.XML?.token.toString()
         def player = Player.findByNickname(user)
         def response = new Login()
         if (player) {
+          
             response.key="1"
             response.value="Logged Successfully"
         }
         else{     
+            println "Entro al logeo de new player"
             def newUser =new Player(nickname: user,lastConection:new Date())
             newUser.save(flush:true)
                 Follower follower=new Follower()
@@ -230,5 +233,42 @@ class PlayerController {
             response.value="Error, The user who tries to delete doesn't exist"
         }
         render response as XML
+    }
+    
+    def getScoreFromNickname()
+    {
+        
+    def user = request.XML?.nickname.toString()
+           def player = Player.findByNickname(user)
+        def response = new ResponseValidation()
+        def total= 0;
+        println("usuario: "+user)
+    if (player!=null)
+        { 
+
+            def sum = Score.executeQuery("select max(score)  from Score  where testNumber=10 and state=1 and player="+player.id+" group by level")
+           
+           
+            if (sum==null)
+      sum = 0;
+      else{
+           for (def aux : sum)
+        
+           total = total + aux
+       
+                sum = total;
+      }
+      
+            response.value = sum
+        response.key="1"
+        }else{
+            
+                   response.key="0"
+            response.value="Error, El usuario no existe"
+    
+        }
+        render response as XML
+        
+        
     }
 }

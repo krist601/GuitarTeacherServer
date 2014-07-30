@@ -3,6 +3,8 @@ package teacher
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.XML
 import Services.TestById
+import Services.Report
+import Services.Report
 import Services.ResponseValidation
 import Services.ScoreResult
 import Services.VerifyAnswer
@@ -106,20 +108,44 @@ class TestController {
         }
     }
     
-    
+    /*  
+    def listTestsService(){
+    def levelId=request.XML.levelId.toString()
+    def countTests=request.XML.count.toString()
+    def nickname=Player.findByNickname(request.XML.nickname.toString())
+    def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
+    def validationResponse=new ResponseValidation()
+    println"toy"
+    Collections.shuffle(tests)
+    validationResponse.key = "1";
+    validationResponse.value = "Tests";
+    def xmlLista =  tests as XML 
+    def xmlRespuesta = validationResponse as XML 
+    def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
+    println(xmlSalida.toString())
+    render xmlSalida     
+    }*/
     def listTestsService(){
         def levelId=request.XML.levelId.toString()
         def countTests=request.XML.count.toString()
         def nickname=Player.findByNickname(request.XML.nickname.toString())
-        def tests = Test.findAll("from Test as t where t.level="+levelId, [max:countTests])
+        def tests = Test.findAll("from Test as t where t.level="+levelId+" order by id", [max:countTests])
         def validationResponse=new ResponseValidation()
-        println"toy"
-        Collections.shuffle(tests)
         validationResponse.key = "1";
         validationResponse.value = "Tests";
+          def sco=new Score()
+                sco.player=nickname
+                sco.level=Level.get(levelId)
+                sco.date=new Date()
+                sco.score=0
+                sco.state=0
+                sco.testNumber=0
+                sco.live=3
+                   sco.session=Score.count()+1
+                 sco.save(flush:true)
         def xmlLista =  tests as XML 
         def xmlRespuesta = validationResponse as XML 
-        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
+        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"<sessionToLevel>"+sco.session+"</sessionToLevel></response>"
         println(xmlSalida.toString())
         render xmlSalida     
     }
@@ -137,30 +163,15 @@ class TestController {
         def player=Player.findByNickname(request.XML.nickname.toString())
         def test = Test.get(testId)
         def verification = false
-        def score= Score.findByPlayerAndStateAndSession(player,0,Integer.parseInt(sessionActive))
-        if (test) {
+        def score= Score.findByPlayerAndStateAndSessionAndLevel(player,0,Integer.parseInt(sessionActive),test.level)
+      
+        if (test && score) {
+            score.lock()
             validationResponse.key = "1";
             validationResponse.value = "successfull";
-            if(!score){
-                def sco=new Score()
-                sco.player=player
-                sco.level=test.level
-                sco.date=new Date()
-                sco.score=0
-                sco.state=0
-                sco.testNumber=0
-                sco.live=3
-                sco.save(flush:true)
-                sco.session=Score.count()+1
-                response.session=sco.session
-                score=sco
+        //   if (score.lastTest!=test.id)
+            //  score.testNumber=score.testNumber+1
             
-            }
-               if (score.lastTest!=test.id)
-            {  score.testNumber=score.testNumber+1
-            }else{
-                score.score=score.score-score.lastGain
-            }
             if (test.question!=null){
                 //question
                 def asw=Question.get(test.question.id)
@@ -175,16 +186,20 @@ class TestController {
                     else{
                         verification = false
                         score.live=score.live-1
+                        score.lastGain=0
                     }
-                
-                    if(score.live==0){
+                    score.testNumber=score.testNumber+1
+                    if(score.testNumber==10 && score.live>=0){
+                        // score.state=1
+                        response.score=score.score
+                    }else
+                    if(score.live==-1){
                         score.score=0
-                        score.state=1
+                        score.state=2
                         response.score=score.score
                         response.value="Debes intentarlo de nuevo"
                      
                     }
-                    
                 }
                 else
                 verification = false
@@ -192,17 +207,20 @@ class TestController {
             if (test.theory!=null){
                 score.lastGain = 0
                 score.lastTest=test.id
-                response.session=score.session
+                score.testNumber=score.testNumber+1
             }
          
 
             response.live=score.live
-            score.save()
+           println("Test SQVE!")
+            score.save(flush:true)
         
         }
         else{
             validationResponse.key = "0";
             validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+         println("Test NO SAVE!")
+         
         }
     
         def xmlLista =  response as XML 
@@ -224,54 +242,77 @@ class TestController {
         def player=Player.findByNickname(req.nickname.text())
         def test = Test.get(testId)
         def verification = false
-        def score= Score.findByPlayerAndStateAndSession(player,0,Integer.parseInt(sessionActive))
-        if (test) {
+        def score= Score.findByPlayerAndStateAndSessionAndLevel(player,0,Integer.parseInt(sessionActive),test.level)
+ if (test && score) {
+                score.lock()
             validationResponse.key = "1";
             validationResponse.value = "successfull";
-            if(!score){
-                def sco=new Score()
-                sco.player=player
-                sco.level=test.level
-                sco.date=new Date()
-                sco.score=0
-                sco.state=0
-                sco.testNumber=0
-                sco.live=3
-                sco.save(flush:true)
-                sco.session=Score.count()+1
-                response.session=sco.session
-                score=sco
-            
-            }
-               if (score.lastTest!=test.id)
+     
+            if (score.lastTest!=test.id)
             {  score.testNumber=score.testNumber+1
             }else{
                 score.score=score.score-score.lastGain
             }
-            if (test.practice!=null){
-                  score.lastTest=test.id
-                def soundClient=request.getFile('mp3')
-                def soundClientBytes=soundClient.getBytes()
+           
+            score.lastTest=test.id
+            def soundClient=request.getFile('mp3')
+            def soundClientBytes=soundClient.getBytes()
                  
-                def engine = new SoundEngine()
-                def correlation = Math.round(engine.decodeMp3(test.practice.audio.sound,soundClientBytes)*100)
-                score.score=score.score+correlation
-                  score.lastGain=correlation
-                if (correlation>89)
-                response.value = "Excelente"
-                else if (correlation>59)
-                response.value = "Buen intento"
-                else if (correlation>39)
-                response.value = "Tu puedes hacerlo mejor!"
-                else if (correlation>0)
-                response.value = "Vuelve a intentarlo, tu puedes mejorar"
-                verification = true
+            def engine = new SoundEngine()
+            def correlation=-1;
+            if (test.testType.id==3 || test.testType.id==9)//NOTAS note(byte[] muestra, String begin, String end,String frequency)
+            correlation = Math.round(engine.note(soundClientBytes,test.note.range,test.note.frequency))
+            else
+            if (test.testType.id==4 || test.testType.id==10)//CHORD
+            correlation = Math.round(engine.analizeChord(soundClientBytes,test.chord.range,test.chord.frequency))
+            else
+            if (test.testType.id==5 || test.testType.id==11)//Rhythmicaudio,rangos,arrayTimes,frecuencias
+            correlation = Math.round(engine.rhythmic(soundClientBytes,test.rhythmic.range,test.rhythmic.time,test.rhythmic.frequency))
+      
+            if (correlation==10)
+            response.value = "Excelente"
+            else if (correlation>5)
+            response.value = "Buen intento"
+            else if (correlation>=0)
+            response.value = "Tu puedes hacerlo mejor!"
+            else if (correlation<0)
+           { correlation=0;
+            response.value = "Vuelve a intentarlo, tu puedes mejorar"
+           }
+            response.score = correlation
+            score.score=score.score+correlation
+            score.lastGain=correlation
+            verification = true
+            
+            def pracSco=PracticeScore.findByScoreAndNoteAndChordAndRhythmic(score,test.note,test.chord,test.rhythmic)
+            if (pracSco){
+                if (pracSco.points<correlation){
+                    pracSco.points=correlation
+                    pracSco.save(flush:true)
+                }
             }
+            else{
+                def sco=new PracticeScore()
+                sco.score=score
+                sco.points=correlation
+
+
+                if (test.testType.id==3 || test.testType.id==9)//NOTES
+                sco.note=test.note
+                else
+                if (test.testType.id==4 || test.testType.id==10)//CHORD
+                sco.chord=test.chord
+                else
+                if (test.testType.id==5 || test.testType.id==11)//Rhythmic
+                sco.rhythmic=test.rhythmic
+                 sco.save(flush:true)
+            }
+            println("Test  SAVE!")
             //sonido 
-            score.save()
-        
+                score.save(flush:true)
         }
         else{
+             println("Test NO SAVE!")
             validationResponse.key = "0";
             validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
         }
@@ -283,8 +324,8 @@ class TestController {
     }
     
     def commitResultTest(){
-          def response = new ScoreResult()
-          def validationResponse=new ResponseValidation()
+        def response = new ScoreResult()
+        def validationResponse=new ResponseValidation()
         def sessionActive=request.XML.session.text()
         def player=Player.findByNickname(request.XML.nickname.toString())
         def level=Level.get(request.XML.level.toString())
@@ -292,20 +333,20 @@ class TestController {
         if (score) { 
             validationResponse.key = "1";
             validationResponse.value = "successfull";
-        if(score.testNumber==8){
-            score.score=score.score+(score.live*10)
-            score.state=1
-            response.live=score.live
-            response.score=score.score
-              score.save()
-        }
+            if(score.testNumber==10){
+                score.score=score.score+score.live
+                score.state=1
+                response.live=score.live
+                response.score=score.score
+                score.save(flush:true)
+            }
     
-    } else{
+        } else{
             validationResponse.key = "0";
-            validationResponse.value = "Error, the test with id "+testId+" doesn't exist";
+            validationResponse.value = "Error, score doesn't exist";
         }
         
-           def xmlLista =  response as XML 
+        def xmlLista =  response as XML 
         def xmlRespuesta = validationResponse as XML 
         def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
         render xmlSalida
@@ -430,13 +471,13 @@ class TestController {
                 response.theory=test.theory.description
                 response.title=test.theory.name
                 response.sound=test.theory.audio.sound
-               if (test.testType.id==3)
+                if (test.testType.id==3)
                 response.instruction=test.note.name
-               if (test.testType.id==4)
+                if (test.testType.id==4)
                 response.instruction=test.chord.name
-               if (test.testType.id==5){
-                response.instruction=test.rhythmic.name
-                response.times=test.rhythmic.time
+                if (test.testType.id==5){
+                    response.instruction=test.rhythmic.name
+                    response.times=test.rhythmic.time
                 }
                 
             }
@@ -462,16 +503,13 @@ class TestController {
                 xmlImages=xmlImages.toString().substring(xmlImages.toString().indexOf(">")+1)
 
             }
-              if (test.testType.id==9 || test.testType.id==10 || test.testType.id==11){//practica
+            if (test.testType.id==9 || test.testType.id==10){//practica
                 response.image=test.theory.image.image
-                 if (test.testType.id==9)
+                if (test.testType.id==9)
                 response.instruction=test.note.name
-               if (test.testType.id==10)
+                if (test.testType.id==10)
                 response.instruction=test.chord.name
-               if (test.testType.id==11){
-                response.instruction=test.rhythmic.name
-                response.times=test.rhythmic.time
-                }
+              
             }
             
             def xmlLista =  response as XML 
@@ -490,5 +528,267 @@ class TestController {
         }
         render xmlSalida
             
+    }
+    
+    
+    
+    def reportService(){
+        def player=request.XML.nickname.toString()
+        
+        def response=new Report()
+        def row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Player as p, Score as s, Level as l, Test as t, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND l.id = s.level AND l.id = t.level AND n.id = t.note group by n.name order by count(n.name) desc ")
+        if (row[0])    
+            response.notaMasTocadaUsuario = row[0]
+        else
+            response.notaMasTocadaUsuario = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM Player as p, Score as s, Level as l, Test as t, Chord as a WHERE '"+player+"' = p.nickname AND p.id = s.player AND l.id = s.level AND l.id = t.level AND a.id = t.chord group by a.name order by count(a.name) desc")
+        if (row[0])    
+            response.acordeMasTocadoUsuario = row[0]
+        else
+            response.acordeMasTocadoUsuario = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Player as p, Score as s, Level as l, Test as t, Rhythmic as r WHERE '"+player+"' = p.nickname AND p.id = s.player AND l.id = s.level AND l.id = t.level AND r.id = t.rhythmic group by r.name order by count(r.name) desc ")
+        if (row[0])    
+            response.ritmicaMasTocadaUsuario = row[0]
+        else
+            response.ritmicaMasTocadaUsuario = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Score as s, Level as l, Test as t, Note as n WHERE l.id = s.level AND l.id = t.level AND n.id = t.note group by n.name order by count(n.name) desc ")
+        if (row[0])    
+            response.notaMasTocadaGlobal = row[0]
+        else
+            response.notaMasTocadaGlobal = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM Score as s, Level as l, Test as t, Chord as a WHERE l.id = s.level AND l.id = t.level AND a.id = t.chord group by a.name order by count(a.name) desc ")
+        if (row[0])    
+            response.acordeMasTocadaGlobal = row[0]
+        else
+            response.acordeMasTocadaGlobal = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Score as s, Level as l, Test as t, Rhythmic as r WHERE l.id = s.level AND l.id = t.level AND r.id = t.rhythmic group by r.name order by count(r.name) desc ")
+        if (row[0])    
+            response.ritmicaMasTocadaGlobal = row[0]
+        else
+            response.ritmicaMasTocadaGlobal = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Player as p, Score as s, Level as l, Test as t, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND l.id = s.level AND l.id = t.level AND n.id = t.note group by n.name order by count(n.name) ")
+        if (row[0])    
+            response.notaMenosTocadaUsuario = row[0]
+        else
+            response.notaMenosTocadaUsuario = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM Player as p, Score as s, Level as l, Test as t, Chord as a WHERE '"+player+"' = p.nickname AND p.id = s.player AND l.id = s.level AND l.id = t.level AND a.id = t.chord group by a.name order by count(a.name) ")
+        if (row[0])    
+            response.acordeMenosTocadaUsuario = row[0]
+        else
+            response.acordeMenosTocadaUsuario = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Player as p, Score as s, Level as l, Test as t, Rhythmic as r WHERE '"+player+"' = p.nickname AND p.id = s.player AND l.id = s.level AND l.id = t.level AND r.id = t.rhythmic group by r.name order by count(r.name) ")
+        if (row[0])    
+            response.ritmicaMenosTocadaUsuario = row[0]
+        else
+            response.ritmicaMenosTocadaUsuario = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Score as s, Level as l, Test as t, Note as n WHERE l.id = s.level AND l.id = t.level AND n.id = t.note group by n.name order by count(n.name) ")
+        if (row[0])    
+            response.notaMenosTocadaGlobal = row[0]
+        else
+            response.notaMenosTocadaGlobal = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM Score as s, Level as l, Test as t, Chord as a WHERE l.id = s.level AND l.id = t.level AND a.id = t.chord group by a.name order by count(a.name) ")
+        if (row[0])    
+            response.acordeMenosTocadaGlobal = row[0]
+        else
+            response.acordeMenosTocadaGlobal = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Score as s, Level as l, Test as t, Rhythmic as r WHERE l.id = s.level AND l.id = t.level AND r.id = t.rhythmic group by r.name order by count(r.name)  ")
+        if (row[0])    
+            response.ritmicaMenosTocadaGlobal = row[0]
+        else
+            response.ritmicaMenosTocadaGlobal = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id group by n.name order by sum(ps.points)/count(n.name) desc ")
+        if (row[0])    
+            response.notaMasFacil = row[0]
+        else
+            response.notaMasFacil = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM Player as p, Score as s,PracticeScore as ps, Chord as a WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.chord=a.id group by a.name order by sum(ps.points)/count(a.name) desc ")
+        if (row[0])    
+            response.acordeMasFacil = row[0]
+        else
+            response.acordeMasFacil = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Player as p, Score as s,PracticeScore as ps, Rhythmic as r WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.rhythmic=r.id group by r.name order by sum(ps.points)/count(r.name) desc ")
+        if (row[0])    
+            response.ritmicaMasFacil = row[0]
+        else
+            response.ritmicaMasFacil = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id group by n.name order by sum(ps.points)/count(n.name) ")
+        if (row[0])    
+            response.notaMasDificil = row[0]
+        else
+            response.notaMasDificil = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM Player as p, Score as s,PracticeScore as ps, Chord as a WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.chord=a.id group by a.name order by sum(ps.points)/count(a.name) ")
+        if (row[0])    
+            response.acordeMasDificil = row[0]
+        else
+            response.acordeMasDificil = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Player as p, Score as s,PracticeScore as ps, Rhythmic as r WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.rhythmic=r.id group by r.name order by sum(ps.points)/count(r.name) ")
+        if (row[0])    
+            response.ritmicaMasDificil = row[0]
+        else
+            response.ritmicaMasDificil = "Ninguna"
+            
+        
+        
+        
+        
+        
+        
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Score as s,PracticeScore as ps, Note as n WHERE s.id = ps.score AND ps.note=n.id group by n.name order by sum(ps.points)/count(n.name) desc ")
+        if (row[0])    
+            response.notaMasFacilGlobal = row[0]
+        else
+            response.notaMasFacilGlobal = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM  Score as s,PracticeScore as ps, Chord as a WHERE s.id = ps.score AND ps.chord=a.id group by a.name order by sum(ps.points)/count(a.name) desc ")
+        if (row[0])    
+            response.acordeMasFacilGlobal = row[0]
+        else
+            response.acordeMasFacilGlobal = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Score as s,PracticeScore as ps, Rhythmic as r WHERE s.id = ps.score AND ps.rhythmic=r.id group by r.name order by sum(ps.points)/count(r.name) desc ")
+        if (row[0])    
+            response.ritmicaMasFacilGlobal = row[0]
+        else
+            response.ritmicaMasFacilGlobal = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) FROM Score as s,PracticeScore as ps, Note as n WHERE s.id = ps.score AND ps.note=n.id group by n.name order by sum(ps.points)/count(n.name) ")
+        if (row[0])    
+            response.notaMasDificilGlobal = row[0]
+        else
+            response.notaMasDificilGlobal = "Ninguna"
+        row = Test.executeQuery("SELECT (CASE WHEN SUBSTRING(a.name,18,1)LIKE' ' THEN SUBSTRING(a.name,17,8) ELSE SUBSTRING(a.name,17,9) END) FROM Score as s,PracticeScore as ps, Chord as a WHERE s.id = ps.score AND ps.chord=a.id group by a.name order by sum(ps.points)/count(a.name) ")
+        if (row[0])    
+            response.acordeMasDificilGlobal = row[0]
+        else
+            response.acordeMasDificilGlobal = "Ninguno"
+        row = Test.executeQuery("SELECT SUBSTRING(r.name,33,char_length(r.name)-33) FROM Score as s,PracticeScore as ps, Rhythmic as r WHERE  s.id = ps.score AND ps.rhythmic=r.id group by r.name order by sum(ps.points)/count(r.name) ")
+        if (row[0])    
+            response.ritmicaMasDificilGlobal = row[0]
+        else
+            response.ritmicaMasDificilGlobal = "Ninguna"
+            
+        
+        
+        
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'DO'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionDO = row[0]
+        else
+            response.mayorPuntuacionDO = "0"
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'DO#'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionDOS = row[0]
+        else
+            response.mayorPuntuacionDOS = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'RE'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionRE= row[0]
+        else
+            response.mayorPuntuacionRE = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'RE#'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionRES = row[0]
+        else
+            response.mayorPuntuacionRES = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'MI'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionMI = row[0]
+        else
+            response.mayorPuntuacionMI = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'FA'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionFA = row[0]
+        else
+            response.mayorPuntuacionFA = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'FA#'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionFAS = row[0]
+        else
+            response.mayorPuntuacionFAS = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'SOL'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionSOL = row[0]
+        else
+            response.mayorPuntuacionSOL = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'SOL#'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionSOLS = row[0]
+        else
+            response.mayorPuntuacionSOLS = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'LA'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionLA = row[0]
+        else
+            response.mayorPuntuacionLA = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'LA#'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionLAS = row[0]
+        else
+            response.mayorPuntuacionLAS = 0
+        row = Test.executeQuery("SELECT coalesce(max(ps.points),'0') FROM Player as p, Score as s,PracticeScore as ps, Note as n WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score AND ps.note=n.id AND 'SI'=(CASE WHEN SUBSTRING(n.name,18,1)LIKE' ' THEN SUBSTRING(n.name,16,2) ELSE SUBSTRING(n.name,16,3) END) group by n.name order by max(ps.points) desc ")
+        if (row[0])    
+            response.mayorPuntuacionSI = row[0]
+        else
+            response.mayorPuntuacionSI = 0
+        row = Test.executeQuery("SELECT ROUND(avg(ps.points),2) FROM Player as p, Score as s,PracticeScore as ps WHERE '"+player+"' = p.nickname AND p.id = s.player AND s.id = ps.score") 
+        if (row[0])    
+            response.promedioPractica = row[0]
+        else
+            response.promedioPractica = "0"
+        row = Test.executeQuery("SELECT ROUND(avg(ps.points),2) FROM Score as s,PracticeScore as ps WHERE s.id = ps.score") 
+        if (row[0])    
+            response.promedioPracticaGlobal = row[0]
+        else
+            response.promedioPracticaGlobal = "0"
+        def promedioTeoria=0
+        row = Test.executeQuery("SELECT s.score - s.live, sum(ps.points) from PracticeScore as ps right join ps.score as s WHERE '"+player+"'=s.player.nickname and s.state=1 GROUP BY s.score,s.live")
+        for (def queryRow : row){
+            def score=queryRow[0]
+            def practiceScore=queryRow[1]
+            if (promedioTeoria==0)
+                if (practiceScore)
+                    promedioTeoria=score-practiceScore
+                else
+                    promedioTeoria=score
+            else
+                if (practiceScore)
+                    promedioTeoria=(promedioTeoria+(score-practiceScore)) / 2
+                else
+                    promedioTeoria=(promedioTeoria+(score)) / 2
+        }
+        print promedioTeoria
+        try{
+        response.promedioTeoria = String.format("%.4g",promedioTeoria)
+        }
+        catch(Exception e){
+            response.promedioTeoria=promedioTeoria
+            
+        }
+        
+        
+        def promedioTeoriaGlobal=0
+        row = Test.executeQuery("SELECT s.score - s.live, sum(ps.points) from PracticeScore as ps right join ps.score as s WHERE s.state=1 GROUP BY s.score,s.live")
+        for (def queryRow : row){
+            def score=queryRow[0]
+            def practiceScore=queryRow[1]
+            if (promedioTeoriaGlobal==0)
+                if (practiceScore)
+                    promedioTeoriaGlobal=score-practiceScore
+                else
+                    promedioTeoriaGlobal=score
+            else
+                if (practiceScore)
+                    promedioTeoriaGlobal=(promedioTeoriaGlobal+(score-practiceScore)) / 2
+                else
+                    promedioTeoriaGlobal=(promedioTeoriaGlobal+(score)) / 2
+        }
+        print promedioTeoriaGlobal
+        try{
+        response.promedioTeoriaGlobal = String.format("%.4g",promedioTeoriaGlobal)
+        }
+        catch(Exception e){
+            response.promedioTeoriaGlobal=promedioTeoriaGlobal
+            
+        }
+        print response as XML
+        render response as XML
+        
     }
 }

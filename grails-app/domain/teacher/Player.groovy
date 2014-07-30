@@ -6,6 +6,7 @@ class Player {
     Date lastConection
     
     static constraints = {
+        nickname unique: true
     }
     static mapping = {
         cascade: 'all-delete-orphan'

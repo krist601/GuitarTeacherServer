@@ -6,6 +6,7 @@ class VerifyAnswer {
     String value
     boolean verification
     int score
+    int live
     
     static constraints = {
     }

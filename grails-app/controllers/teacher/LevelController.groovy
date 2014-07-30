@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import Services.ResponseValidation
 import grails.converters.XML
 import Services.Difficulty
+import Services.LevelByUser
 
 class LevelController {
 
@@ -113,6 +114,92 @@ class LevelController {
         def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
       //  println(xmlSalida.toString())
       render(text:xmlSalida,contentType:"text/xml",encoding:"UTF-8")
+        //def bookOutput = new XmlSlurper().parseText(xmlSalida) 
+        // render bookOutput as XML)
+       
+        // render fri as XML
+    }
+ def listLevelsGroupByDifficultyByUserService(){
+        def validationResponse=new ResponseValidation()
+        def levels=Level.findAll(sort:"difficulty")
+ 
+        def player=Player.findByNickname(request.XML.nickname.toString())
+        println request.XML.nickname.toString()
+        validationResponse.key = "1";
+        validationResponse.value = "Levels";
+        def difficult = -1
+        def isFirth = true
+        def difficultyNormalQuery = Level.executeQuery("select COALESCE(max(l.difficulty),1) from Score s,Level l where s.level=l and s.player="+player.id )
+        def difficultyNormal=difficultyNormalQuery.getAt(0)
+        def difficulties = "<Difficulties>"
+        def someEnable=false
+        for (level in levels){
+            if (level.difficulty!=difficult){
+                if (!isFirth)
+                difficulties += "</Difficulty>"      
+                difficulties += "<Difficulty>"      
+                difficult=level.difficulty
+                isFirth = false
+                
+            }
+            def levelByUser = new LevelByUser()
+            levelByUser.level = level.id
+           levelByUser.name=level.name+":"+level.description
+            if (difficultyNormal>difficult){
+                levelByUser.imageId=level.success.id
+                levelByUser.state = "Success"
+       
+            }else
+            if ((difficultyNormal+1)<difficult){
+                levelByUser.imageId=level.disabled.id
+                levelByUser.state = "Disabled"
+            }else{
+                def score = Score.findAllByLevelAndPlayerAndState(level,player,1);
+                if (difficultyNormal==difficult){
+           
+                    println("state "+score.state)
+                    println("level "+levelByUser.level)
+                    if (score.state.getAt(0)==null){
+                        levelByUser.imageId=level.normal.id
+                        levelByUser.state = "Enable"
+                        someEnable = true
+                    }else
+                  {
+                        levelByUser.imageId=level.success.id
+                        levelByUser.state = "Success"
+                    }
+                    
+                }else // Igual a dificultad mas 1
+                { if (someEnable==true)
+                    {
+                        levelByUser.imageId=level.disabled.id
+                        levelByUser.state = "Disabled"
+      
+                        
+                    }
+                    else{
+                     
+                            levelByUser.imageId=level.normal.id
+                            levelByUser.state = "Enable"
+                       
+                        
+                    }
+                    
+                }
+                
+                     
+            }
+            def levelString = levelByUser as XML
+      
+            difficulties += (levelString).toString().substring(levelString.toString().indexOf(">")+1)
+        }
+        
+        difficulties += "</Difficulty></Difficulties>"
+        def xmlLista =   difficulties 
+        def xmlRespuesta = validationResponse as XML 
+        def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista+"</response>"
+        println(xmlSalida.toString())
+        render(text:xmlSalida,contentType:"text/xml",encoding:"UTF-8")
         //def bookOutput = new XmlSlurper().parseText(xmlSalida) 
         // render bookOutput as XML)
        

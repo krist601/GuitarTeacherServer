@@ -14,4 +14,5 @@ class Score {
     static constraints = {
         
     }
+ 
 }

@@ -107,13 +107,26 @@ class FollowerController {
       
         def user=request.XML.nickname.toString();
         def usuario = Player.findByNickname(user)
+      
         def validationResponse=new ResponseValidation()
         def friends = new ArrayList<FriendScore>()
-        def j=Follower.executeQuery("select p.nickname  as nick, (select coalesce(sum(s.score),'0') from Score s where p=s.player) as score from Follower f,Player p where f.player="+usuario.id+" and f.follower=p ")
+     //"select coalesce(sum(s.score),'0') from (select coalesce(max(s.score),'0') maximos from Score s where s.testNumber=10 and s.state=1 and s.player="+player.id+" group by s.level) x"
+    if (usuario!=null){
+        def j=Follower.executeQuery("select p.nickname  as nick,p.id   from Follower f,Player p where f.player="+usuario.id+" and f.follower=p ")
         for ( aux in j){
             def friend = new FriendScore()
             friend.name = aux[0]
-            friend.score = aux[1]
+                   def sum = Score.executeQuery("select max(score)    from Score  where testNumber=10 and state=1 and player="+aux[1]+" group by level")
+           def total = 0;
+           
+            if (sum==null)
+      sum = 0;
+      else{
+           for (auxi in sum)
+            total = total + auxi
+                sum = total;
+      }
+            friend.score = sum
             friends <<friend
        
         }
@@ -124,7 +137,12 @@ class FollowerController {
         def xmlSalida = "<?xml version=\"1.0\" encoding=\"UTF-8\"  ?><response>"+xmlRespuesta.toString().substring(xmlRespuesta.toString().indexOf(">")+1)+xmlLista.toString().substring(xmlLista.toString().indexOf(">")+1)+"</response>"
         println(xmlSalida.toString())
         render xmlSalida
-       
+    }else
+    {    validationResponse.key = "0";
+        validationResponse.value = "Error, El usuario no existe";
+          render validationResponse;
+    }
+  
     }
   
     def uploadProfilePhotoService(String nickName) {
